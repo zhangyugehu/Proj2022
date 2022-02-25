@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LaunchMode</string>
+    <string name="mode_single_instance_pre_task">SingleInstancePreTask</string>
+    <string name="mode_single_instance">SingleInstance</string>
+    <string name="mode_single_task">SingleTask</string>
+    <string name="mode_single_top">SingleTop</string>
+    <string name="mode_standard">Standard</string>
+    <string name="str_next">Next</string>
+</resources>
