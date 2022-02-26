@@ -1,13 +1,8 @@
 package com.thssh.algorithm;
 
+import com.thssh.algorithm.util.BinaryTree;
 import com.thssh.algorithm.util.Queue;
 import com.thssh.algorithm.util.Stack;
-import com.thssh.algorithm.util.BinaryTree;
-
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class Client {
     public static void main(String[] args) {
@@ -53,15 +48,6 @@ public class Client {
     }
 
     private static void tree() {
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(
-                2,
-                2,
-                2,
-                TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(5),
-                (ThreadFactory) Thread::new,
-                (runnable, threadPoolExecutor) -> System.out.println("runnable: " + runnable + " rejected")
-        );
 
         BinaryTree<String> binaryTree = new BinaryTree<>();
         for (int i = 0; i < 10; i++) {
