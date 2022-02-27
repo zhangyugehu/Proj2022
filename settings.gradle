@@ -16,3 +16,5 @@ include ':fakeleakcanary'
 include ':workmanager'
 include ':launchmode'
 include ':commonlib'
+include 'leetcode'
+
