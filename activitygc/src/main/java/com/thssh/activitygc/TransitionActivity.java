@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.thssh.activitygc.fragment.TransitionFragment;
+import com.thssh.commonlib.activity.TrojanActivity;
 import com.thssh.commonlib.logger.AbsLifeCycleActivity;
 
 public class TransitionActivity extends AbsLifeCycleActivity {
@@ -58,5 +60,9 @@ public class TransitionActivity extends AbsLifeCycleActivity {
 
     public void startSelf(View view) {
         open(this, message + "[loop]");
+    }
+
+    public void startFragment(View view) {
+        TrojanActivity.withFragment(this, TransitionFragment.class, TransitionFragment.newArgs("TransitionActivity"));
     }
 }

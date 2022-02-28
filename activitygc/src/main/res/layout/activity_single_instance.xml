@@ -7,10 +7,19 @@
     tools:context=".SingleInstanceActivity">
 
     <Button
+        android:id="@+id/btn11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Transition"
         android:onClick="startTransition" />
+
+    <Button
+        android:layout_below="@+id/btn11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Fragment"
+        android:onClick="startFragment" />
 
 </RelativeLayout>

@@ -2,4 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.thssh.commonlib">
 
+    <application>
+        <activity
+            android:name=".activity.TrojanActivity"
+            android:launchMode="singleTask"
+            android:exported="false"/>
+    </application>
+
 </manifest>
