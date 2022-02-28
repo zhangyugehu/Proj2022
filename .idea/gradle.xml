@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/DemoJava" />
+            <option value="$PROJECT_DIR$/activitygc" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/commonlib" />
             <option value="$PROJECT_DIR$/demoJ" />

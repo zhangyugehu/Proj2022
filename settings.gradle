@@ -18,3 +18,4 @@ include ':launchmode'
 include ':commonlib'
 include 'leetcode'
 
+include ':activitygc'
