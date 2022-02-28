@@ -21,21 +21,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class TrojanActivity extends BaseActivity {
-    public TrojanActivity() {
-        registerActivityDelegate(new SimpleActivityDelegate(this) {
-            @Override
-            public void onDestroy() {
-                super.onDestroy();
-                Toast.makeText(host, "onDestroy", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onResume() {
-                super.onResume();
-                Toast.makeText(host, "onResume", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
     public static final String EXTRA_LAYOUT = "extra_trojan_layout";
     public static final String EXTRA_TROJAN_KEY = "extra_trojan_trojan_key";
