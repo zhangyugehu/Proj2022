@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +14,11 @@ import android.widget.TextView;
 import com.thssh.activitygc.MemAllocActivity;
 import com.thssh.activitygc.R;
 import com.thssh.activitygc.SingleInstanceActivity;
+import com.thssh.commonlib.activity.BaseFragment;
 import com.thssh.commonlib.activity.TrojanActivity;
-import com.thssh.commonlib.logger.AbsLifeCycleFragment;
 import com.thssh.commonlib.logger.L;
 
-public class TransitionFragment extends AbsLifeCycleFragment {
+public class TransitionFragment extends BaseFragment {
     private static final String ARGS_MSG = "args_message";
 
     public static Bundle newArgs(String message) {
@@ -40,7 +40,7 @@ public class TransitionFragment extends AbsLifeCycleFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             message = getArguments().getString(ARGS_MSG);
-            L.d(logTag(), "message: ", message);
+            L.d(getTag(), "message: ", message);
         }
     }
 

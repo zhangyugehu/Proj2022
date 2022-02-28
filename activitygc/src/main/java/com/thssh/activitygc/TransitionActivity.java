@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.thssh.activitygc.fragment.TransitionFragment;
+import com.thssh.commonlib.activity.BaseActivity;
 import com.thssh.commonlib.activity.TrojanActivity;
-import com.thssh.commonlib.logger.AbsLifeCycleActivity;
 
-public class TransitionActivity extends AbsLifeCycleActivity {
+public class TransitionActivity extends BaseActivity {
 
     private static final String EXTRA_MSG = "extra_message";
 

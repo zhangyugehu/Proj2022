@@ -1,14 +1,13 @@
 package com.thssh.activitygc;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.thssh.activitygc.fragment.TransitionFragment;
+import com.thssh.commonlib.activity.BaseActivity;
 import com.thssh.commonlib.activity.TrojanActivity;
-import com.thssh.commonlib.logger.AbsLifeCycleActivity;
 
-public class SingleInstanceActivity extends AbsLifeCycleActivity {
+public class SingleInstanceActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

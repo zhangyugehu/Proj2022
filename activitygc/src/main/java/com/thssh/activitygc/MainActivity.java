@@ -3,9 +3,9 @@ package com.thssh.activitygc;
 import android.os.Bundle;
 import android.view.View;
 
-import com.thssh.commonlib.logger.AbsLifeCycleActivity;
+import com.thssh.commonlib.activity.BaseActivity;
 
-public class MainActivity extends AbsLifeCycleActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

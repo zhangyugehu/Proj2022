@@ -6,9 +6,9 @@ import android.text.format.Formatter;
 import android.view.View;
 import android.widget.TextView;
 
-import com.thssh.commonlib.logger.AbsLifeCycleActivity;
+import com.thssh.commonlib.activity.BaseActivity;
 
-public class MemAllocActivity extends AbsLifeCycleActivity {
+public class MemAllocActivity extends BaseActivity {
 
     TextView console;
     Handler h;
