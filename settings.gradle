@@ -19,3 +19,4 @@ include ':commonlib'
 include 'leetcode'
 
 include ':activitygc'
+include ':appfloatwindow'

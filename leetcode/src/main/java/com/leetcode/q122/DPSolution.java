@@ -25,11 +25,13 @@ public class DPSolution implements ISolution {
 
         System.out.println(len);
         for (int i = 1; i < len; i++) {
+            System.out.println("cash: " + dp[i - 1][CASH] + " <> " + dp[i - 1][STOCK] +  "+" + prices[i] + "=" + (dp[i - 1][STOCK] + prices[i]));
+            System.out.println("stock: " + dp[i - 1][STOCK] + " <> " + dp[i - 1][CASH] +  "-" + prices[i] + "=" + (dp[i - 1][CASH] - prices[i]));
             dp[i][CASH] = Math.max(dp[i - 1][CASH], dp[i - 1][STOCK] + prices[i]);
             dp[i][STOCK] = Math.max(dp[i - 1][STOCK], dp[i - 1][CASH] - prices[i]);
             System.out.print(i +">>");
-            for (int j = 0; j < dp.length; j++) {
-                System.out.print(Arrays.toString(dp[j]));
+            for (int[] ints : dp) {
+                System.out.print(Arrays.toString(ints));
             }
             System.out.println();
         }
