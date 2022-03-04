@@ -9,14 +9,11 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Binder;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewManager;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +53,7 @@ public class PopWindowService extends Service implements FloatRelativeLayout.OnM
             contextWrapper = new MutableContextWrapper(context);
             root = new FloatRelativeLayout(context);
             root.setOnClickListener((v) -> Toast.makeText(context, "FloatRelativeLayout", Toast.LENGTH_LONG).show());
-            root.setListener(this);
+            root.setOnMoveListener(this);
             textView = new TextView(context);
             textView.setText("Hahahahah");
 //            textView.setOnClickListener((v) -> Toast.makeText(context, textView.getText(), Toast.LENGTH_LONG).show());
