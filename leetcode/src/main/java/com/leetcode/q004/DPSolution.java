@@ -1,16 +1,19 @@
 package com.leetcode.q004;
 
 public class DPSolution implements ISolution {
+
     @Override
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int m = nums1.length;
         int n = nums2.length;
-        int left = (m + n + 1) / 2 - 1;
-        int right = (m + n + 2) / 2 - 1;
+        int left = (m + n + 1) / 2;
+        int right = (m + n + 2) / 2;
         return (find(nums1, 0, nums2, 0, left) + find(nums1, 0, nums2, 0, right)) / 2.0;
     }
 
     /**
+     * 12345
+     * 06789
      * @param nums1
      * @param p1 nums1的起始位置
      * @param nums2

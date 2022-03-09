@@ -18,6 +18,10 @@ import android.widget.TextView;
 import com.thssh.commonlib.logger.L;
 
 public class SecondActivity extends PopWindowActivity {
+    public SecondActivity() {
+        L.d("SecondActivity", L.getStackTracesPlain(20));
+    }
+
     PopWindowService popService;
     CountDownTimer timer;
 
@@ -66,6 +70,8 @@ public class SecondActivity extends PopWindowActivity {
     protected void onResume() {
         super.onResume();
         showWindowWhenConnected();
+        // 14, 9, 78, 78, 81, 72, 61, 64
+        // 14, 9, 61, 64, 78, 81, 78, 78
     }
 
     void showWindowWhenConnected() {

@@ -10,7 +10,7 @@ rootProject.name = "Proj2022"
 include ':app'
 include 'm_java'
 include 'demoJ'
-include 'DemoJava'
+include 'javacommon'
 
 include ':fakeleakcanary'
 include ':workmanager'

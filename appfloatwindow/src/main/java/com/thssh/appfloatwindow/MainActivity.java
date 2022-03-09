@@ -21,6 +21,9 @@ import com.thssh.commonlib.logger.L;
 public class MainActivity extends PopWindowActivity {
     PopWindowService popService;
 
+    public MainActivity() {
+        L.d("MainActivity", L.getStackTracesPlain(8));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
