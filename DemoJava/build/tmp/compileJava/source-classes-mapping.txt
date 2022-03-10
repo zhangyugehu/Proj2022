@@ -27,18 +27,15 @@ com/thssh/base/ClassDemo.java
  com.thssh.base.ClassDemo$StaticInnerClass
 com/thssh/algorithm/Client.java
  com.thssh.algorithm.Client
-com/thssh/algorithm/leetcode/Stock1.java
- com.thssh.algorithm.leetcode.Stock1
- com.thssh.algorithm.leetcode.Stock1$Solution
 com/thssh/algorithm/util/Timer.java
  com.thssh.algorithm.util.Timer
 com/thssh/handler/ActivityThread.java
  com.thssh.handler.ActivityThread
  com.thssh.handler.ActivityThread$H
-com/thssh/base/ReferenceDemo.java
- com.thssh.base.ReferenceDemo
 com/thssh/handler/Handler.java
  com.thssh.handler.Handler
+com/thssh/base/ReferenceDemo.java
+ com.thssh.base.ReferenceDemo
 com/thssh/algorithm/util/Stack.java
  com.thssh.algorithm.util.Stack
  com.thssh.algorithm.util.Stack$Node
