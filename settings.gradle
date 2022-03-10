@@ -20,3 +20,4 @@ include 'leetcode'
 
 include ':activitygc'
 include ':appfloatwindow'
+include ':touchevent'
