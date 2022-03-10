@@ -11,16 +11,17 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/DemoJava" />
             <option value="$PROJECT_DIR$/activitygc" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/appfloatwindow" />
             <option value="$PROJECT_DIR$/commonlib" />
             <option value="$PROJECT_DIR$/demoJ" />
             <option value="$PROJECT_DIR$/fakeleakcanary" />
+            <option value="$PROJECT_DIR$/javacommon" />
             <option value="$PROJECT_DIR$/launchmode" />
             <option value="$PROJECT_DIR$/leetcode" />
             <option value="$PROJECT_DIR$/m_java" />
+            <option value="$PROJECT_DIR$/touchevent" />
             <option value="$PROJECT_DIR$/workmanager" />
           </set>
         </option>

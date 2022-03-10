@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../layout/custom_preview.xml" value="0.25729166666666664" />
         <entry key="activitygc/src/main/res/layout/activity_main.xml" value="0.23072916666666668" />
         <entry key="activitygc/src/main/res/layout/activity_mem_alloc.xml" value="0.23072916666666668" />
         <entry key="activitygc/src/main/res/layout/activity_single_instance.xml" value="0.23072916666666668" />
@@ -20,6 +21,7 @@
         <entry key="launchmode/src/main/res/layout/activity_single_top.xml" value="0.37604166666666666" />
         <entry key="launchmode/src/main/res/layout/activity_standard.xml" value="0.37025641025641026" />
         <entry key="launchmode/src/main/res/layout/fragment_test.xml" value="0.37604166666666666" />
+        <entry key="touchevent/src/main/res/layout/activity_main.xml" value="0.37604166666666666" />
         <entry key="workmanager/src/main/res/layout/activity_main.xml" value="0.37604166666666666" />
       </map>
     </option>

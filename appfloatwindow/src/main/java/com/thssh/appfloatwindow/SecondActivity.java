@@ -1,23 +1,24 @@
 package com.thssh.appfloatwindow;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.MutableContextWrapper;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.util.TypedValue;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.thssh.commonlib.logger.L;
 
+/**
+ * @author hutianhang
+ */
 public class SecondActivity extends PopWindowActivity {
+    public SecondActivity() {
+        L.d("SecondActivity", L.getStackTracesPlain(20));
+    }
+
     PopWindowService popService;
     CountDownTimer timer;
 
@@ -33,6 +34,8 @@ public class SecondActivity extends PopWindowActivity {
                 if (service instanceof PopWindowService.InnerBinder) {
                     popService = ((PopWindowService.InnerBinder) service).getService();
                     L.d("SecondActivity", "onServiceConnected: ", popService.hashCode());
+                } else {
+                    throw new IllegalArgumentException("onServiceConnected Unsupported.");
                 }
             }
 
@@ -66,6 +69,8 @@ public class SecondActivity extends PopWindowActivity {
     protected void onResume() {
         super.onResume();
         showWindowWhenConnected();
+        // 14, 9, 78, 78, 81, 72, 61, 64
+        // 14, 9, 61, 64, 78, 81, 78, 78
     }
 
     void showWindowWhenConnected() {
