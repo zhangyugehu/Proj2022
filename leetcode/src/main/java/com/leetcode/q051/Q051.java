@@ -1,7 +1,5 @@
 package com.leetcode.q051;
 
-import java.util.List;
-
 /**
  * 51. N 皇后<br>
  * n 皇后问题 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。<br><br>
@@ -27,12 +25,14 @@ import java.util.List;
  * 提示：<br><br>
  *
  * 1 <= n <= 9
+ * @author hutianhang
  */
 public class Q051 {
 
     public static void main(String[] args) {
-        ISolution solution = new DFSSolution();
-        List<List<String>> queens = solution.solveNQueens(4);
-        System.out.println(queens);
+        ISolution solution = new Solution();
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i + ": " + solution.solveNQueens(i));
+        }
     }
 }
