@@ -1,5 +1,7 @@
 package com.thssh.commonlib.logger;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -8,6 +10,19 @@ import java.util.Map;
 public class L {
     private static final String TAG = "Proj2022";
 
+    static Handler h = new Handler(Looper.getMainLooper());
+
+    public static void dLatest(Object... msgQueue) {
+        dLatest(1000, msgQueue);
+    }
+
+    public static void dLatest(int delay, Object... msgQueue) {
+//        h.removeCallbacksAndMessages(null);
+        h.postDelayed(() -> {
+            h.removeCallbacksAndMessages(null);
+            d(msgQueue);
+        }, delay);
+    }
     public static void d(Object... msgQueue) {
         StringBuilder sb = new StringBuilder();
         for (Object msg : msgQueue) {

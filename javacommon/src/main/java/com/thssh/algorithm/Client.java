@@ -4,11 +4,32 @@ import com.thssh.algorithm.util.BinaryTree;
 import com.thssh.algorithm.util.Queue;
 import com.thssh.algorithm.util.Stack;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Random;
+
 public class Client {
     public static void main(String[] args) {
 //        queue();
 //        stack();
-        tree();
+//        tree();
+        bigHeap();
+    }
+
+    private static void bigHeap() {
+        PriorityQueue<Integer> heap = new PriorityQueue<>((o1, o2) -> {
+            System.out.println(o1 + "  " + o2);
+            return o1 - o2;
+        });
+        Random random = new Random();
+
+        int N = 10;
+        for (int i = 0; i < N; i++) {
+            int next = random.nextInt(N >> 1) + (N >> 1);
+            System.out.println("next: " + next);
+            heap.add(next);
+        }
+        // 8 7 5 8 9 7 7 6 7 9
     }
 
     private static void queue() {
