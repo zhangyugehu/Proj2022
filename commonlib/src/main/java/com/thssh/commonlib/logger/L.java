@@ -5,28 +5,46 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class L {
     private static final String TAG = "Proj2022";
 
     static Handler h = new Handler(Looper.getMainLooper());
+    static AtomicBoolean flag = new AtomicBoolean(true);
+
+    static Map<String, Object[]> dDiffLast = new HashMap<>();
+
+    public static void dDiff(String tag, Object... msgQueue) {
+        if (!Arrays.equals(dDiffLast.get(tag), msgQueue)) {
+            d(msgQueue);
+            dDiffLast.put(tag, msgQueue);
+        }
+    }
 
     public static void dLatest(Object... msgQueue) {
         dLatest(1000, msgQueue);
     }
 
     public static void dLatest(int delay, Object... msgQueue) {
-//        h.removeCallbacksAndMessages(null);
+        if (flag.getAndSet(false)) {
+            d(msgQueue);
+        }
         h.postDelayed(() -> {
             h.removeCallbacksAndMessages(null);
-            d(msgQueue);
+            flag.set(true);
         }, delay);
     }
+
     public static void d(Object... msgQueue) {
         StringBuilder sb = new StringBuilder();
         for (Object msg : msgQueue) {
-            if (msg != null) sb.append(msg.toString()).append(" ");
+            if (msg != null) {
+                sb.append(msg).append(" ");
+            }
         }
         Log.d(TAG, sb.toString());
     }
@@ -34,7 +52,9 @@ public class L {
     public static void td(Object... msgQueue) {
         StringBuilder sb = new StringBuilder();
         for (Object msg : msgQueue) {
-            if (msg != null) sb.append(msg).append(" ");
+            if (msg != null) {
+                sb.append(msg).append(" ");
+            }
         }
         Log.d(TAG, tNamePrefix() + sb);
     }
@@ -52,7 +72,9 @@ public class L {
             if (Thread.currentThread() == entry.getKey()) {
                 for (StackTraceElement ele : entry.getValue()) {
                     if (startRecord) {
-                        if (++depthIdx > depth) break;
+                        if (++depthIdx > depth) {
+                            break;
+                        }
                         sb.append("\n👉")
                                 .append(ele.getClassName()).append(".").append(ele.getMethodName())
                                 .append("@Line: ").append(ele.getLineNumber())

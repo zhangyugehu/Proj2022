@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,17 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.thssh.commonlib.logger.L;
 
+/**
+ * @author hutianhang
+ */
 public class RecyclerLayout extends RecyclerView {
+
     public RecyclerLayout(@NonNull Context context) {
-        super(context);
+        this(context, null);
     }
 
     public RecyclerLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public RecyclerLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+//        setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
     @Override
@@ -34,46 +40,43 @@ public class RecyclerLayout extends RecyclerView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         findScrollView(this);
-        if (scrollLayout != null) {
-        }
     }
+
+    float downY;
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         boolean handle;
-//        if (scrollLayout != null && scrollLayout.handleEvent()) {
-//            handle = false;
-//        } else {
-//            handle = super.onTouchEvent(e);
-//        }
+        switch (e.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                downY = e.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                boolean up = e.getY() < downY;
+                if (up) {
+                    scrollLayout.requestDisallowInterceptTouchEvent(false);
+                }
+                break;
+        }
         handle = super.onTouchEvent(e);
         if (e.getActionMasked() == MotionEvent.ACTION_MOVE) {
-            L.dLatest(
-                    "RecyclerLayout",
-                    "onTouchEvent",
-                    MotionEvent.actionToString(e.getActionMasked()),
-                    handle
-            );
+            L.dDiff("RecyclerLayout", "onTouchEvent",
+                    MotionEvent.actionToString(e.getActionMasked()), handle);
         } else {
-            L.d(
-                    "RecyclerLayout",
-                    "onTouchEvent",
-                    MotionEvent.actionToString(e.getActionMasked()),
-                    handle
-            );
+            L.d("RecyclerLayout", "onTouchEvent",
+                    MotionEvent.actionToString(e.getActionMasked()), handle);
         }
         return handle;
     }
 
-    ScrollLayout scrollLayout;
+    ScrollView scrollLayout;
 
     private void findScrollView(View view) {
-        if (view instanceof ScrollLayout) {
-            scrollLayout = (ScrollLayout) view;
+        if (view instanceof ScrollView) {
+            scrollLayout = (ScrollView) view;
         } else if (view.getParent() instanceof ViewGroup) {
             findScrollView((View) view.getParent());
         }
     }
-
 
 }

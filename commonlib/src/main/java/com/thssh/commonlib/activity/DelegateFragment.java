@@ -19,7 +19,8 @@ import java.util.List;
 public class DelegateFragment extends Fragment {
     private final List<IFragmentDelegate> mFragmentDelegate;
 
-    private FragmentLifeCycleDelegate lifeCycleDelegate;
+    protected FragmentLifeCycleDelegate lifeCycleDelegate;
+
     public DelegateFragment() {
         mFragmentDelegate = new ArrayList<>();
         lifeCycleDelegate = new FragmentLifeCycleDelegate(getClass().getSimpleName() + "@" + hashCode());

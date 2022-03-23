@@ -19,6 +19,10 @@ import com.thssh.touchevent.RecyclerLayout;
 import java.util.List;
 
 public abstract class AbsListFragment extends BaseFragment {
+    public AbsListFragment() {
+        unregisterFragmentDelegate(lifeCycleDelegate);
+    }
+
     RecyclerLayout recyclerView;
 
     @Nullable

@@ -12,6 +12,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.thssh.commonlib.logger.L;
 
+/**
+ * @author hutianhang
+ */
 public class ScrollLayout extends ScrollView {
     public ScrollLayout(Context context) {
         this(context, null);
@@ -26,32 +29,44 @@ public class ScrollLayout extends ScrollView {
         setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
+    float lastY;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean handle = super.onTouchEvent(event);
         if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
-            L.dLatest("ScrollLayout", "onTouchEvent", MotionEvent.actionToString(event.getAction()), handle);
+            L.dLatest("ScrollLayout", "onTouchEvent",
+                    MotionEvent.actionToString(event.getAction()), handle);
+            boolean isScrollUp = event.getY() < lastY;
+            if (isScrollUp && isChildViewTop()) {
+                L.d("ScrollLayout", "reDispatchTouchEvent");
+                event.setAction(MotionEvent.ACTION_DOWN);
+                dispatchTouchEvent(event);
+            }
+            lastY = event.getY();
         } else {
-            L.d("ScrollLayout", "onTouchEvent", MotionEvent.actionToString(event.getAction()), handle);
+            L.d("ScrollLayout", "onTouchEvent",
+                    MotionEvent.actionToString(event.getAction()), handle);
         }
         return handle;
+    }
+
+    private boolean isChildViewTop() {
+        return childView != null && scrollTop == childView.getTop();
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
 //        boolean handle = super.onInterceptTouchEvent(ev);
         boolean handle = childView != null && scrollTop < childView.getTop();
-        L.d("ScrollLayout", "onInterceptTouchEvent", MotionEvent.actionToString(ev.getAction()), handle, scrollTop, childView.getTop());
+        L.dDiff("ScrollLayout", "onInterceptTouchEvent",
+                MotionEvent.actionToString(ev.getAction()), handle, scrollTop, childView.getTop());
         return handle;
     }
 
     ViewPager viewPager;
     ChildView childView;
     int scrollTop;
-
-    public boolean handleEvent() {
-        return childView != null && scrollTop < childView.getTop();
-    }
 
     @Override
     protected void onAttachedToWindow() {
