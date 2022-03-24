@@ -6,4 +6,6 @@ public interface IPaintAbility {
     void lineTo(float x, float y);
 
     void reset();
+
+    void setColor(int color);
 }

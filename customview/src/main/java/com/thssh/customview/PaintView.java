@@ -5,10 +5,10 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -17,6 +17,8 @@ import com.thssh.customview.helper.IRepo;
 import com.thssh.customview.helper.PathInfo;
 import com.thssh.customview.helper.PathSaver;
 import com.thssh.customview.helper.PreferencesRepo;
+
+import top.defaults.colorpicker.ColorPickerPopup;
 
 /**
  * TODO: document your custom view class.
@@ -30,11 +32,14 @@ public class PaintView extends View {
 
     private TextPaint mTextPaint;
     private Paint paint;
+    private Paint colorPaint;
     private IRepo<PathInfo> repo;
 
-    PathSaver path;
+    PathSaver pathSaver;
     private float mTextWidth;
     private float mTextHeight;
+
+    GestureDetector detector;
 
     public PaintView(Context context) {
         super(context);
@@ -52,6 +57,13 @@ public class PaintView extends View {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        detector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public void onLongPress(MotionEvent e) {
+                super.onLongPress(e);
+                pickColor();
+            }
+        });
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.PaintView, defStyle, 0);
@@ -80,6 +92,7 @@ public class PaintView extends View {
         mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextAlign(Paint.Align.LEFT);
 
+        colorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(mExampleColor);
         paint.setStyle(Paint.Style.STROKE);
@@ -92,7 +105,32 @@ public class PaintView extends View {
 
         repo = new PreferencesRepo(getContext());
 
-        path = new PathSaver(repo);
+        pathSaver = new PathSaver(repo);
+        pathSaver.setColor(mExampleColor);
+    }
+
+    private void pickColor() {
+        new ColorPickerPopup.Builder(getContext())
+                .initialColor(getExampleColor())
+                .showIndicator(true)
+                .showValue(true)
+                .build()
+                .show(PaintView.this, new ColorPickerPopup.ColorPickerObserver() {
+                    @Override
+                    public void onColorPicked(int color) {
+                        setExampleColor(color);
+                    }
+                });
+    }
+
+    public int getExampleColor() {
+        return mExampleColor;
+    }
+
+    public void setExampleColor(int color) {
+        this.mExampleColor = color;
+//        paint.setColor(color);
+        pathSaver.setColor(color);
     }
 
     private void invalidateTextPaintAndMeasurements() {
@@ -108,27 +146,32 @@ public class PaintView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (detector.onTouchEvent(event)) {
+            return true;
+        }
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_UP:
-                path.reset();
-                invalidate();
+                if (event.getPointerCount() > 3) {
+                    pathSaver.reset();
+                    invalidate();
+                }
                 break;
             case MotionEvent.ACTION_DOWN:
-                if (path == null) {
-                    path = new PathSaver(repo);
+                if (pathSaver == null) {
+                    pathSaver = new PathSaver(repo);
                 }
-                path.moveTo(event.getX(), event.getY());
+                pathSaver.moveTo(event.getX(), event.getY());
                 targetPointer = event.getPointerId(event.getActionIndex());
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (event.getPointerId(event.getActionIndex()) == targetPointer) {
                     // 只支持单指
-                    path.lineTo(event.getX(), event.getY());
+                    pathSaver.lineTo(event.getX(), event.getY());
                     invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                path.save();
+                pathSaver.save();
                 break;
         }
         return true;
@@ -153,8 +196,11 @@ public class PaintView extends View {
 //                paddingTop + (contentHeight + mTextHeight) / 2,
 //                mTextPaint);
 
-        if (path != null) {
-            canvas.drawPath(path.getPath(), paint);
+        if (pathSaver != null) {
+            for (PathInfo.Info info : pathSaver.getPathInfo().infos) {
+                paint.setColor(info.color);
+                canvas.drawPath(info.path, paint);
+            }
         }
     }
 
