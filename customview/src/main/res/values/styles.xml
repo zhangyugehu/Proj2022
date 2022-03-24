@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="Widget.Theme.Proj2022.MyView" parent="">
+        <item name="android:background">@color/white</item>
+        <item name="exampleColor">@color/light_blue_400</item>
+    </style>
+</resources>

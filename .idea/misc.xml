@@ -13,7 +13,9 @@
         <entry key="appfloatwindow/src/main/res/layout/activity_second.xml" value="0.12083333333333333" />
         <entry key="customview/src/main/res/drawable/ic_launcher_background.xml" value="0.1605" />
         <entry key="customview/src/main/res/layout/activity_main.xml" value="0.16354166666666667" />
+        <entry key="customview/src/main/res/layout/activity_paint.xml" value="0.23072916666666668" />
         <entry key="customview/src/main/res/layout/activity_thread_view.xml" value="0.16354166666666667" />
+        <entry key="customview/src/main/res/layout/sample_paint_view.xml" value="0.21666666666666667" />
         <entry key="fakeleakcanary/src/main/res/layout/activity_leaked.xml" value="0.2" />
         <entry key="fakeleakcanary/src/main/res/layout/activity_looped.xml" value="0.2" />
         <entry key="fakeleakcanary/src/main/res/layout/activity_main.xml" value="0.25" />
