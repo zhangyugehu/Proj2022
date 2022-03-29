@@ -4,7 +4,6 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.25729166666666664" />
-        <entry key="..\:/Users/zhang/Workspaces/Proj2022/glide/src/main/res/layout/activity_main.xml" value="0.17083333333333334" />
         <entry key="activitygc/src/main/res/layout/activity_main.xml" value="0.23072916666666668" />
         <entry key="activitygc/src/main/res/layout/activity_mem_alloc.xml" value="0.23072916666666668" />
         <entry key="activitygc/src/main/res/layout/activity_single_instance.xml" value="0.23072916666666668" />
@@ -30,6 +29,7 @@
         <entry key="okhttp/src/main/res/layout/activity_main.xml" value="0.14479166666666668" />
         <entry key="touchevent/src/main/res/layout/activity_event1.xml" value="0.2919369786839666" />
         <entry key="touchevent/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="touchevent/src/main/res/layout/activity_main_2.xml" value="0.37604166666666666" />
         <entry key="workmanager/src/main/res/layout/activity_main.xml" value="0.37604166666666666" />
       </map>
     </option>

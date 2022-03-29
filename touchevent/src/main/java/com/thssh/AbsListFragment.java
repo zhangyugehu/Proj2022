@@ -1,4 +1,4 @@
-package com.thssh.touchevent.fragments;
+package com.thssh;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,17 +23,17 @@ public abstract class AbsListFragment extends BaseFragment {
         unregisterFragmentDelegate(lifeCycleDelegate);
     }
 
-    RecyclerLayout recyclerView;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        recyclerView = new RecyclerLayout(requireContext());
+        RecyclerView recyclerView = provideRecyclerView(container.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         recyclerView.setAdapter(new InnerAdapter(requireContext(), createData(), primaryColor()));
         return recyclerView;
     }
+
+    protected abstract RecyclerView provideRecyclerView(Context context);
 
     protected abstract int primaryColor();
 

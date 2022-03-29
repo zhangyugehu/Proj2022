@@ -1,22 +1,21 @@
-package com.thssh.touchevent.fragments;
+package com.thssh.touchevent2.fragments;
 
 import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagerOne extends RecyclerLayoutFragment {
-
+public class FragmentOne extends BaseFragment {
     @Override
     protected int primaryColor() {
-        return Color.parseColor("#d99477");
+        return Color.parseColor("#aff28b");
     }
 
     @Override
     protected List<String> createData() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            list.add("PagerOne-" + i);
+            list.add("FragmentOne-" + i);
         }
         return list;
     }
