@@ -9,8 +9,15 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thssh.commonlib.logger.L;
+import com.thssh.touchevent2.EventHandler;
 
+/**
+ * @author hutianhang
+ */
 public class RecyclerView2 extends RecyclerView {
+
+    public EventHandler eventHandler;
+
     public RecyclerView2(@NonNull Context context) {
         super(context);
     }
@@ -21,6 +28,11 @@ public class RecyclerView2 extends RecyclerView {
 
     public RecyclerView2(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
+        eventHandler.addRecyclerView(this);
     }
 
     @Override

@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.thssh.touchevent.R;
+import com.thssh.touchevent2.fragments.BaseFragment;
 import com.thssh.touchevent2.fragments.FragmentOne;
 import com.thssh.touchevent2.fragments.FragmentThree;
 import com.thssh.touchevent2.fragments.FragmentTwo;
@@ -26,7 +27,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     interface FragmentGetter {
-        Fragment invoke();
+        BaseFragment invoke();
     }
 
     private List<FragmentGetter> mGetter;
@@ -49,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
             @NonNull
             @Override
             public Fragment getItem(int position) {
-                return mGetter.get(position).invoke();
+                BaseFragment fragment = mGetter.get(position).invoke();
+                fragment.setEventHandler(eventHandler);
+                return fragment;
             }
 
             @Override

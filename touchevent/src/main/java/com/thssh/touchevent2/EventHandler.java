@@ -5,9 +5,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.thssh.commonlib.logger.L;
+import com.thssh.touchevent2.views.RecyclerView2;
 
 public class EventHandler {
 
@@ -24,6 +26,10 @@ public class EventHandler {
     public void setViewPager(ViewPager viewpager) {
         this.pager = viewpager;
         viewpager.setOnTouchListener(new OnPagerTouchListener());
+    }
+
+    public void addRecyclerView(RecyclerView recyclerView) {
+
     }
 
     class OnPagerTouchListener implements View.OnTouchListener {
