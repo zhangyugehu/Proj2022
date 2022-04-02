@@ -4,20 +4,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.thssh.commonlib.activity.BaseActivity;
+import com.thssh.commonlib.executor.Executors;
+import com.thssh.commonlib.executor.MainExecutor;
+import com.thssh.commonlib.executor.ThreadChecker;
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.views.LoadingWrapper;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okio.AsyncTimeout;
 
 /**
  * @author hutianhang
@@ -39,10 +45,32 @@ public class MainActivity extends BaseActivity implements Callback {
             e.printStackTrace();
         }
         start = System.currentTimeMillis();
-        Call call = OkClient.INSTANCE.getClient(60).newCall(new Request.Builder()
-                .url("https://api.bbaecache.com/api/v2/market/getAllSymbols")
-                .get().build());
-        call.enqueue(this);
+        Executors.single().execute(() -> {
+            Call call = OkClient.INSTANCE.getClient(60).newCall(new Request.Builder()
+                    .url("https://www.google.com")
+                    .get().build());
+            try {
+                Response response = call.execute();
+                L.d("Response", response.code());
+                final String stringifyBody = response.body().string();
+                setHelloText(stringifyBody);
+            } catch (IOException e) {
+                L.d("IOException", e.getMessage());
+            }
+//            call.enqueue(this);
+        });
+
+        AsyncTimeout timeout = new AsyncTimeout() {
+
+            @Override
+            protected void timedOut() {
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    L.td("timedOut");
+                }
+            }
+        };
+        timeout.timeout(2, TimeUnit.SECONDS);
+        timeout.enter();
     }
 
     @Override
@@ -50,10 +78,7 @@ public class MainActivity extends BaseActivity implements Callback {
         L.d("onFailure: ",
                 e.getMessage(),
                 String.valueOf((System.currentTimeMillis() - start) / 1000));
-        hello.post(() -> {
-            hello.setText(e.getMessage());
-            LoadingWrapper.with(hello).dismiss();
-        });
+        setHelloText(e.getMessage());
     }
 
     @Override
@@ -71,10 +96,18 @@ public class MainActivity extends BaseActivity implements Callback {
         } catch (IOException e) {
             bodyStringify = e.getMessage();
         }
-        String finalBodyStringify = bodyStringify;
-        hello.post(() -> {
-            LoadingWrapper.with(hello).dismiss();
-            hello.setText(finalBodyStringify);
-        });
+        setHelloText(bodyStringify);
+    }
+
+    private void setHelloTextDirect(CharSequence text) {
+        LoadingWrapper.release(hello);
+        hello.setText(text);
+    }
+    private void setHelloText(CharSequence text) {
+        if (ThreadChecker.isUIThread()) {
+            setHelloTextDirect(text);
+        } else {
+            Executors.main().execute(text, this::setHelloTextDirect);
+        }
     }
 }

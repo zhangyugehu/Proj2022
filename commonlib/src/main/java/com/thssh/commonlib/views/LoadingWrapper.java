@@ -1,6 +1,8 @@
 package com.thssh.commonlib.views;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,12 @@ public class LoadingWrapper extends RelativeLayout {
         }
     }
 
+    public static void release(View view) {
+        if (view.getParent() instanceof LoadingWrapper) {
+            ((LoadingWrapper) view.getParent()).releaseLoading(view);
+        }
+    }
+
     public static void dismiss(LoadingWrapper... loadings) {
         for (LoadingWrapper loading : loadings) {
             if (loading != null) {
@@ -36,6 +44,9 @@ public class LoadingWrapper extends RelativeLayout {
 
     private View mContentView;
     private ProgressBar mLoadingView;
+    private Handler handler;
+
+    ViewGroup.LayoutParams originLayoutParams;
 
     private LoadingWrapper(Context context) {
         this(context, null);
@@ -43,6 +54,7 @@ public class LoadingWrapper extends RelativeLayout {
 
     private LoadingWrapper(View view) {
         this(view.getContext());
+        handler = new Handler(Looper.getMainLooper());
         setContentView(view);
     }
 
@@ -56,7 +68,6 @@ public class LoadingWrapper extends RelativeLayout {
                     break;
                 }
             }
-            ViewGroup.LayoutParams originLayoutParams;
             if (viewIndex != -1 && (originLayoutParams = view.getLayoutParams()) != null) {
                 parent.removeViewAt(viewIndex);
                 LayoutParams newLayoutParams = new LayoutParams(originLayoutParams);
@@ -105,12 +116,51 @@ public class LoadingWrapper extends RelativeLayout {
         showLoading(false);
     }
 
+    public void dismiss(long delay) {
+        showLoading(false, delay);
+    }
+
+    boolean nextStatus = false;
+    final Runnable showLoadingDelay = this::showLoadingReal;
+
+    public void showLoading(boolean flag, long delay) {
+        handler.removeCallbacks(showLoadingDelay);
+        nextStatus = flag;
+        handler.postDelayed(showLoadingDelay, delay);
+    }
+
     public void showLoading(boolean flag) {
+        handler.removeCallbacks(showLoadingDelay);
+        nextStatus = flag;
+        showLoadingReal();
+    }
+
+    private void showLoadingReal() {
         if (mContentView != null) {
+            boolean flag = nextStatus;
             boolean enable = !flag;
             mContentView.setEnabled(enable);
             mContentView.setAlpha(flag ? 0.5f : 1.0f);
             mLoadingView.setVisibility(flag ? VISIBLE : GONE);
+        }
+    }
+
+    public void releaseLoading(View view) {
+        dismiss();
+        if (view == mContentView && getParent() instanceof ViewGroup) {
+            ViewGroup parent = (ViewGroup) getParent();
+            int childAt = -1;
+            for (int i = 0; i < parent.getChildCount(); i++) {
+                if (this == parent.getChildAt(i)) {
+                    childAt = i;
+                    break;
+                }
+            }
+            if (childAt != -1) {
+                removeAllViews();
+                parent.removeViewAt(childAt);
+                parent.addView(mContentView, childAt, originLayoutParams);
+            }
         }
     }
 
