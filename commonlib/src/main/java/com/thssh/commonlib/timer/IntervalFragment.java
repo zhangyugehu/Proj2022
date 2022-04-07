@@ -30,18 +30,18 @@ public class IntervalFragment extends Fragment implements Lifecycle {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        for (LifecycleListener listener : lifecycleListeners) {
-            listener.onPause();
-        }
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         for (LifecycleListener listener : lifecycleListeners) {
             listener.onStop();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        for (LifecycleListener listener : lifecycleListeners) {
+            listener.onDestroy();
         }
     }
 }

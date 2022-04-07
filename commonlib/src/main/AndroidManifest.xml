@@ -5,7 +5,6 @@
     <application>
         <activity
             android:name=".activity.TrojanActivity"
-            android:launchMode="singleTask"
             android:exported="false"/>
     </application>
 

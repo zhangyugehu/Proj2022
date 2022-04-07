@@ -28,7 +28,7 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
 
     private void onInterval1() {
         L.td("onInterval2 START", SystemClock.uptimeMillis());
-        IntervalTimer.stop(intervalTimer1);
+        IntervalTimer.destroy(intervalTimer1);
         new CountDownTimer(1000, 1000) {
 
             @Override
@@ -45,7 +45,7 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
 
     private void onInterval() {
         L.td("onInterval START", SystemClock.uptimeMillis());
-        IntervalTimer.stop(intervalTimer);
+        IntervalTimer.destroy(intervalTimer);
         new CountDownTimer(1000, 1000) {
 
             @Override

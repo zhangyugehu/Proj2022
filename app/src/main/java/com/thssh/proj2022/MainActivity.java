@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        IntervalTimer.stop(timer);
+        IntervalTimer.destroy(timer);
     }
 
     public void openSecond(View view) {

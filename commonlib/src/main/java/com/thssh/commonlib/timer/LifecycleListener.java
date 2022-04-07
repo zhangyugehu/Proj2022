@@ -4,7 +4,7 @@ public interface LifecycleListener {
 
     void onStart();
 
-    void onPause();
-
     void onStop();
+
+    void onDestroy();
 }

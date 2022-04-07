@@ -2,10 +2,7 @@ package com.thssh.commonlib.timer;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -31,7 +28,7 @@ public class IntervalTimer implements LifecycleListener, Runnable {
     public static void pause(IntervalTimer... timers) {
         for (IntervalTimer timer : timers) {
             if (timer != null) {
-                timer.stop();
+                timer.pause();
             }
         }
     }
@@ -44,7 +41,7 @@ public class IntervalTimer implements LifecycleListener, Runnable {
         }
     }
 
-    public static void stop(IntervalTimer... timers) {
+    public static void destroy(IntervalTimer... timers) {
         for (IntervalTimer timer : timers) {
             if (timer != null) {
                 timer.stop();
@@ -59,7 +56,7 @@ public class IntervalTimer implements LifecycleListener, Runnable {
     public IntervalTimer() {
         HandlerThread workerThread = new HandlerThread("interval_thread@" + hashCode());
         workerThread.start();
-        worker = new Handler(Looper.myLooper());
+        worker = new Handler(workerThread.getLooper());
     }
 
     public IntervalTimer(long timeout, Runnable callback) {
@@ -78,8 +75,13 @@ public class IntervalTimer implements LifecycleListener, Runnable {
         startReal();
     }
 
+    public void pause() {
+        worker.removeCallbacks(this);
+    }
+
     public void stop() {
         worker.removeCallbacks(this);
+        callback = null;
     }
 
     @Override
@@ -101,12 +103,12 @@ public class IntervalTimer implements LifecycleListener, Runnable {
     }
 
     @Override
-    public void onPause() {
+    public void onStop() {
         pause(this);
     }
 
     @Override
-    public void onStop() {
-        stop(this);
+    public void onDestroy() {
+        destroy(this);
     }
 }
