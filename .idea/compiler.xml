@@ -13,6 +13,7 @@
       <module name="Proj2022.launchmode" target="11" />
       <module name="Proj2022.leetcode" target="11" />
       <module name="Proj2022.okhttp" target="11" />
+      <module name="Proj2022.recyclerview" target="11" />
       <module name="Proj2022.touchevent" target="11" />
       <module name="Proj2022.workmanager" target="11" />
     </bytecodeTargetLevel>

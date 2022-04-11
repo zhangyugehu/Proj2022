@@ -4,7 +4,7 @@ import android.content.Context;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.thssh.AbsListFragment;
+import com.thssh.commonlib.fragment.AbsListFragment;
 import com.thssh.touchevent2.EventHandler;
 import com.thssh.touchevent2.views.RecyclerView2;
 
