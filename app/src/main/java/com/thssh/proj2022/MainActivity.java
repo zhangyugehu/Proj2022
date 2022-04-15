@@ -9,6 +9,8 @@ import android.view.View;
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.timer.IntervalTimer;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -22,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void testIntervalTimer() {
         IntervalTimer.with(this, 1_000, () -> L.td("with doWork!! " + System.currentTimeMillis()));
-//        timer = new IntervalTimer(3_000, () -> L.td("doWork!! " + System.currentTimeMillis())).start();
     }
 
     @Override
@@ -44,6 +45,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openSecond(View view) {
-        startActivity(new Intent(this, SecondActivity.class));
+        Intent intent = new Intent(this, SecondActivity.class);
+        for (int i = 0; i < 10000; i++) {
+            // 52,858,131
+            // 24,124,221
+            // 24,041,304
+            // 24,107,815
+            // 23,949,273
+//            SerializableBean bean = new SerializableBean(i);
+//            intent.putExtra("serializable" + i, bean);
+            // 1,048,855
+            // 521,927
+            // 219,010
+            // 204,167
+            // 200,417
+            ParcelableBean parcelableBean = new ParcelableBean(20, Arrays.asList(new ParcelableBean.InnerBean("zhang")));
+            intent.putExtra("parcelable", parcelableBean);
+        }
+        startActivity(intent);
     }
 }

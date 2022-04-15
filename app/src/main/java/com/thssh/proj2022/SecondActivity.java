@@ -2,14 +2,18 @@ package com.thssh.proj2022;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
 import android.os.SystemClock;
 import android.view.View;
 
 import com.thssh.commonlib.activity.TrojanActivity;
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.timer.IntervalTimer;
+
+import java.io.Serializable;
 
 public class SecondActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +28,16 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         intervalTimer1 = IntervalTimer.with(this, 2_000, this::onInterval1);
 
         findViewById(R.id.button).setOnClickListener(this);
+
+        Intent intent = getIntent();
+        long start = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+//            SerializableBean serializable = (SerializableBean) intent.getSerializableExtra("serializable" + i);
+            ParcelableBean parcelable = intent.getParcelableExtra("parcelable");
+        }
+        L.d("duration:", System.nanoTime() - start);
+//        L.d("serializable", serializable.count);
+//        L.d("parcelable", parcelable.count);
     }
 
     private void onInterval1() {
