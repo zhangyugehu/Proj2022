@@ -5,7 +5,7 @@ import android.graphics.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagerOne extends AbsListFragment {
+public class PagerOne extends RecyclerLayoutFragment {
 
     @Override
     protected int primaryColor() {

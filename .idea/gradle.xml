@@ -15,14 +15,18 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/appfloatwindow" />
             <option value="$PROJECT_DIR$/commonlib" />
+            <option value="$PROJECT_DIR$/crypto" />
             <option value="$PROJECT_DIR$/customview" />
             <option value="$PROJECT_DIR$/demoJ" />
             <option value="$PROJECT_DIR$/fakeleakcanary" />
             <option value="$PROJECT_DIR$/glide" />
             <option value="$PROJECT_DIR$/javacommon" />
+            <option value="$PROJECT_DIR$/javasimple" />
             <option value="$PROJECT_DIR$/launchmode" />
             <option value="$PROJECT_DIR$/leetcode" />
             <option value="$PROJECT_DIR$/m_java" />
+            <option value="$PROJECT_DIR$/okhttp" />
+            <option value="$PROJECT_DIR$/recyclerview" />
             <option value="$PROJECT_DIR$/touchevent" />
             <option value="$PROJECT_DIR$/workmanager" />
           </set>

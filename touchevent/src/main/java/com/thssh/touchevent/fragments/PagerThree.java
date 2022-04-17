@@ -16,7 +16,7 @@ import com.thssh.commonlib.activity.BaseFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagerThree extends AbsListFragment {
+public class PagerThree extends RecyclerLayoutFragment {
 
     @Override
     protected int primaryColor() {
