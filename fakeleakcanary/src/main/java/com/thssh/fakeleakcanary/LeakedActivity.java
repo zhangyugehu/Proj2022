@@ -33,7 +33,7 @@ public class LeakedActivity extends AppCompatActivity {
             mHandler.post(() -> {
                 if (BuildConfig.DEBUG) Log.d(App.TAG, "post Runnable: ");
             });
-            SystemClock.sleep(2000);
+            SystemClock.sleep(20000);
             mHandler.sendEmptyMessageDelayed(0, 2000);
         }).start();
     }
