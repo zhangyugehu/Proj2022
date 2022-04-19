@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PaintActivity">
+    tools:context=".activities.PaintActivity">
 
-    <com.thssh.customview.PaintView
+    <com.thssh.customview.views.PaintView
         android:id="@+id/painter"
         style="@style/Widget.Theme.Proj2022.MyView"
         android:layout_width="match_parent"

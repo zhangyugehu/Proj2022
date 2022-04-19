@@ -1,4 +1,4 @@
-package com.thssh.customview;
+package com.thssh.customview.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +14,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.TextView;
+import com.thssh.customview.BuildConfig;
+import com.thssh.customview.R;
 
 /**
  * 测试:

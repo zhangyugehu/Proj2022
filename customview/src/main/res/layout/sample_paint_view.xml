@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.thssh.customview.PaintView
+    <com.thssh.customview.views.PaintView
         style="@style/Widget.Theme.Proj2022.MyView"
         android:layout_width="300dp"
         android:layout_height="300dp"

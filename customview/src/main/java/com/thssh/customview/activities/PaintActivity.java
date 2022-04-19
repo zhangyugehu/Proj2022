@@ -1,8 +1,10 @@
-package com.thssh.customview;
+package com.thssh.customview.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.thssh.customview.views.PaintView;
+import com.thssh.customview.R;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package com.thssh.customview;
+package com.thssh.customview.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;

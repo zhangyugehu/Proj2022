@@ -1,4 +1,4 @@
-package com.thssh.customview;
+package com.thssh.customview.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.thssh.commonlib.utils.UI;
+import com.thssh.customview.R;
 import com.thssh.customview.helper.IRepo;
 import com.thssh.customview.helper.PathInfo;
 import com.thssh.customview.helper.PathSaver;
