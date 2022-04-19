@@ -79,4 +79,9 @@ public class SimpleFragmentDelegate implements IFragmentDelegate {
     public void onDetach() {
 
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+
+    }
 }

@@ -8,11 +8,12 @@
       <module name="Proj2022.commonlib" target="11" />
       <module name="Proj2022.crypto" target="1.8" />
       <module name="Proj2022.customview" target="11" />
-      <module name="Proj2022.fakeleakcanary" target="11" />
       <module name="Proj2022.glide" target="11" />
       <module name="Proj2022.javacommon" target="11" />
       <module name="Proj2022.launchmode" target="11" />
+      <module name="Proj2022.leakcanary" target="11" />
       <module name="Proj2022.leetcode" target="11" />
+      <module name="Proj2022.navigation" target="11" />
       <module name="Proj2022.okhttp" target="11" />
       <module name="Proj2022.recyclerview" target="11" />
       <module name="Proj2022.touchevent" target="11" />

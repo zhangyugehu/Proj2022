@@ -46,4 +46,6 @@ public interface IFragmentDelegate {
 
     
     void onDetach();
+
+    void onHiddenChanged(boolean hidden);
 }

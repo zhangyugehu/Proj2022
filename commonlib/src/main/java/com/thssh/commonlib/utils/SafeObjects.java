@@ -14,4 +14,13 @@ public class SafeObjects {
         }
         return value;
     }
+
+    public static <T> boolean equalsAny(T target, T... srcs) {
+        for (T src : srcs) {
+            if (src.equals(target)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

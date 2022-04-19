@@ -90,4 +90,9 @@ public class FragmentLifeCycleDelegate implements IFragmentDelegate {
     public void onDetach() {
         L.d(logTag(), "onDetach");
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        L.d(logTag(), "onHiddenChanged", hidden);
+    }
 }

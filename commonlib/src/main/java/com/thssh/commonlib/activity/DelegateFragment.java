@@ -16,15 +16,19 @@ import com.thssh.commonlib.logger.FragmentLifeCycleDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DelegateFragment extends Fragment {
+public abstract class DelegateFragment extends Fragment {
     private final List<IFragmentDelegate> mFragmentDelegate;
 
     protected FragmentLifeCycleDelegate lifeCycleDelegate;
 
     public DelegateFragment() {
         mFragmentDelegate = new ArrayList<>();
-        lifeCycleDelegate = new FragmentLifeCycleDelegate(getClass().getSimpleName() + "@" + hashCode());
+        lifeCycleDelegate = new FragmentLifeCycleDelegate(getLogTag());
         registerFragmentDelegate(lifeCycleDelegate);
+    }
+
+    protected String getLogTag() {
+        return getClass().getSimpleName() + "@" + hashCode();
     }
 
     public void registerFragmentDelegate(IFragmentDelegate delegate) {
@@ -68,10 +72,11 @@ public class DelegateFragment extends Fragment {
         for (IFragmentDelegate delegate : mFragmentDelegate) {
             delegate.onCreateView(inflater, container, savedInstanceState);
         }
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return onCreateView(inflater, container);
     }
 
-    @Override
+    protected abstract View onCreateView(LayoutInflater inflater, ViewGroup container);
+
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         for (IFragmentDelegate delegate : mFragmentDelegate) {
@@ -132,6 +137,14 @@ public class DelegateFragment extends Fragment {
         super.onDetach();
         for (IFragmentDelegate delegate : mFragmentDelegate) {
             delegate.onDetach();
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        for (IFragmentDelegate delegate : mFragmentDelegate) {
+            delegate.onHiddenChanged(hidden);
         }
     }
 }
