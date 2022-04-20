@@ -85,6 +85,7 @@ public class LoadingWrapper extends RelativeLayout {
                 LayoutParams loadingLayoutParams = new LayoutParams(UI.dpi(14), UI.dpi(14));
                 loadingLayoutParams.addRule(CENTER_IN_PARENT, TRUE);
                 addView(mLoadingView, loadingLayoutParams);
+                setId(view.getId());
                 // replace
                 parent.addView(this, viewIndex, originLayoutParams);
             }
@@ -159,6 +160,7 @@ public class LoadingWrapper extends RelativeLayout {
             if (childAt != -1) {
                 removeAllViews();
                 parent.removeViewAt(childAt);
+                view.setId(getId());
                 parent.addView(mContentView, childAt, originLayoutParams);
             }
         }

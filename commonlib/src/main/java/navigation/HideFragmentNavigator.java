@@ -1,4 +1,4 @@
-package androidx.navigation;
+package navigation;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,8 +12,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.fragment.NavigationFragment;
+import androidx.navigation.NavBackStackEntry;
+import androidx.navigation.NavDestination;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigator;
 
+import navigation.fragment.NavigationFragment;
+
+import com.thssh.commonlib.R;
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.utils.SafeObjects;
 
@@ -55,8 +61,25 @@ public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Desti
                     ((NavigationFragment) f).willAppear();
                 }
             }
+
+            @Override
+            public void onFragmentDetached(@NonNull FragmentManager fm, @NonNull Fragment f) {
+                super.onFragmentDetached(fm, f);
+                notifyPrevWillAppear();
+            }
         }, true);
         savedIds = new ArrayList<>();
+    }
+
+    private void notifyPrevWillAppear(int... offsetArgs) {
+        int offset = offsetArgs.length > 0 ? offsetArgs[0] : 0;
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if (fragments.size() > 1) {
+            Fragment fragment = fragments.get(fragments.size() - 1 - offset);
+            if (fragment instanceof NavigationFragment) {
+                ((NavigationFragment) fragment).willAppear();
+            }
+        }
     }
 
     @Override
@@ -87,13 +110,8 @@ public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Desti
         } else {
             fragmentManager.popBackStack(popUpTo.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-        if (fragmentManager.getFragments().size() > 1) {
-            Fragment fragment = fragmentManager.getFragments().get(1);
-            if (fragment instanceof NavigationFragment) {
-                ((NavigationFragment) fragment).willAppear();
-            }
-        }
         getState().pop(popUpTo, savedState);
+//        notifyPrevWillAppear(1);
     }
 
     @NonNull
@@ -132,15 +150,15 @@ public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Desti
         Fragment frag = fragmentManager.getFragmentFactory().instantiate(context.getClassLoader(), className);
         frag.setArguments(args);
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        int enterAnim = View.NO_ID;
-        int exitAnim = View.NO_ID;
-        int popEnterAnim = View.NO_ID;
-        int popExitAnim = View.NO_ID;
+        int enterAnim = -1; // R.anim.slide_enter;
+        int exitAnim =  -1; // R.anim.slide_exit;
+        int popEnterAnim =  -1; // R.anim.slide_pop_enter;
+        int popExitAnim =  -1; // R.anim.slide_pop_exit;
         if (navOptions != null) {
-            enterAnim = navOptions.getEnterAnim();
-            exitAnim = navOptions.getExitAnim();
-            popEnterAnim = navOptions.getPopEnterAnim();
-            popExitAnim = navOptions.getPopExitAnim();
+            enterAnim = SafeObjects.getOrDefault(navOptions.getEnterAnim(), enterAnim, -1);
+            exitAnim = SafeObjects.getOrDefault(navOptions.getExitAnim(), exitAnim, -1);
+            popEnterAnim = SafeObjects.getOrDefault(navOptions.getPopEnterAnim(), popEnterAnim, -1);
+            popExitAnim = SafeObjects.getOrDefault(navOptions.getPopExitAnim(), popExitAnim, -1);
         }
         if (!SafeObjects.equalsAny(View.NO_ID, enterAnim, exitAnim, popEnterAnim, popExitAnim)) {
             ft.setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim);
@@ -234,8 +252,8 @@ public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Desti
         @Override
         public void onInflate(@NonNull Context context, @NonNull AttributeSet attrs) {
             super.onInflate(context, attrs);
-            TypedArray typedArray = context.getResources().obtainAttributes(attrs, com.tsh.navigation.R.styleable.FragmentNavigator);
-            String className = typedArray.getString(com.tsh.navigation.R.styleable.FragmentNavigator_android_name);
+            TypedArray typedArray = context.getResources().obtainAttributes(attrs, com.thssh.commonlib.R.styleable.FragmentNavigator);
+            String className = typedArray.getString(com.thssh.commonlib.R.styleable.FragmentNavigator_android_name);
             if (className != null) {
                 this.className = className;
             }

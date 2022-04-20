@@ -9,8 +9,8 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host"
-        android:name="androidx.navigation.fragment.HideNavHostFragment"
-        app:navGraph="@navigation/nav_auth"
+        android:name="navigation.fragment.HideNavHostFragment"
+        app:navGraph="@navigation/nav_start"
         app:defaultNavHost="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
