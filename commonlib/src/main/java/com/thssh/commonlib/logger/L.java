@@ -11,6 +11,31 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class L {
+
+    public interface Logger {
+        void d(String tag, String msg);
+    }
+
+    static class DefaultLogger implements Logger {
+
+        @Override
+        public void d(String tag, String msg) {
+            Log.d(tag, msg);
+        }
+    }
+
+    private static final Logger DEFAULT_LOGGER = new DefaultLogger();
+    private static Logger sLogger = DEFAULT_LOGGER;
+
+
+    public static void setLogger(Logger logger) {
+        sLogger = logger;
+    }
+
+    public static void resetLogger() {
+        sLogger = DEFAULT_LOGGER;
+    }
+
     private static final String TAG = "Proj2022";
 
     static Handler h = new Handler(Looper.getMainLooper());
@@ -46,7 +71,7 @@ public class L {
                 sb.append(msg).append(" ");
             }
         }
-        Log.d(TAG, sb.toString());
+        sLogger.d(TAG, sb.toString());
     }
 
     public static void td(Object... msgQueue) {
@@ -56,7 +81,7 @@ public class L {
                 sb.append(msg).append(" ");
             }
         }
-        Log.d(TAG, tNamePrefix() + sb);
+        sLogger.d(TAG, tNamePrefix() + sb);
     }
 
     private static String tNamePrefix() {

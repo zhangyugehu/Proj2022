@@ -252,8 +252,8 @@ public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Desti
         @Override
         public void onInflate(@NonNull Context context, @NonNull AttributeSet attrs) {
             super.onInflate(context, attrs);
-            TypedArray typedArray = context.getResources().obtainAttributes(attrs, com.thssh.commonlib.R.styleable.FragmentNavigator);
-            String className = typedArray.getString(com.thssh.commonlib.R.styleable.FragmentNavigator_android_name);
+            TypedArray typedArray = context.getResources().obtainAttributes(attrs, new int[] { android.R.attr.name });
+            String className = typedArray.getString(0);
             if (className != null) {
                 this.className = className;
             }
