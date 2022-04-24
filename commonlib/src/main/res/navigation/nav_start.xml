@@ -14,6 +14,17 @@
             android:id="@+id/action_guideFragment_to_nav_auth"
             app:destination="@id/nav_auth" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.tsh.navigation.pages.fragments.LoginFragment"
+        android:label="LoginFragment" >
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.tsh.navigation.pages.fragments.RegisterFragment"
+        android:label="RegisterFragment" >
+    </fragment>
+
 
     <include app:graph="@navigation/nav_auth" />
     <include app:graph="@navigation/nav_main" />

@@ -1,16 +1,13 @@
-package navigation.fragment;
+package androidx.navigation.fragment;
 
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.HideFragmentNavigator;
 import androidx.navigation.NavHostController;
 import androidx.navigation.NavigatorProvider;
-import androidx.navigation.fragment.DialogFragmentNavigator;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.thssh.commonlib.R;
-
-import navigation.HideFragmentNavigator;
 
 public class HideNavHostFragment extends NavHostFragment {
 
@@ -29,5 +26,6 @@ public class HideNavHostFragment extends NavHostFragment {
         navigatorProvider.addNavigator(new HideFragmentNavigator(requireContext(), getParentFragmentManager(), id));
         navigatorProvider.addNavigator(new DialogFragmentNavigator(requireContext(), getParentFragmentManager()));
     }
+
 
 }

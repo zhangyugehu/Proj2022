@@ -1,4 +1,4 @@
-package navigation.fragment;
+package androidx.navigation.fragment;
 
 public interface NavigationFragment {
 
