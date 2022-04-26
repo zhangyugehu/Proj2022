@@ -9,9 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host"
-        android:name="navigation.fragment.HideNavHostFragment"
-        app:navGraph="@navigation/nav_start"
-        app:defaultNavHost="true"
+        android:name="androidx.navigation.fragment.HideNavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

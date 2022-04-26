@@ -10,13 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.navigation.config.RouteMapping;
 
 import com.tsh.navigation.R;
-import com.tsh.navigation.repos.UserRepo;
+import com.tsh.navigation.consts.Route;
 import com.tsh.navigation.state.Store;
 import com.tsh.navigation.state.UserState;
 
-import navigation.fragment.HideNavHostFragment;
 
 public class GuideFragment extends BaseFragment {
 
@@ -62,13 +62,18 @@ public class GuideFragment extends BaseFragment {
 
     private void goNextPage() {
         NavOptions options = new NavOptions.Builder()
-                .setPopUpTo(R.id.guideFragment, true)
+//                .setPopUpTo(R.id.guideFragment, true)
+                .setPopUpTo(RouteMapping.findIdByRoute(Route.GUIDE), true)
                 .build();
         Bundle bundle = new Bundle();
         if (TextUtils.isEmpty(state.token)) {
-            Navigation.findNavController(mRootView).navigate(R.id.action_guideFragment_to_nav_auth, bundle, options);
+            Navigation.findNavController(mRootView).navigate(
+                    RouteMapping.findIdByRoute(Route.LOGIN), bundle, options);
+//            Navigation.findNavController(mRootView).navigate(R.id.action_guideFragment_to_nav_auth, bundle, options);
         } else {
-            Navigation.findNavController(mRootView).navigate(R.id.action_guideFragment_to_nav_main, bundle, options);
+            Navigation.findNavController(mRootView).navigate(
+                    RouteMapping.findIdByRoute(Route.MAIN), bundle, options);
+//            Navigation.findNavController(mRootView).navigate(R.id.action_guideFragment_to_nav_main, bundle, options);
         }
     }
 

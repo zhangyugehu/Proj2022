@@ -6,10 +6,13 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.Navigation;
+import androidx.navigation.config.RouteMapping;
 
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.simple.SimpleTextWatcher;
 import com.tsh.navigation.R;
+import com.tsh.navigation.consts.Route;
 import com.tsh.navigation.state.AuthState;
 import com.tsh.navigation.state.Store;
 
@@ -59,5 +62,10 @@ public class RegisterFragment extends BaseFragment {
                 authState.<AuthState>setState(state -> state.password = s.toString());
             }
         });
+        bindClick(R.id.btn_login, this::onLoginClick);
+    }
+
+    private void onLoginClick(View view) {
+        Navigation.findNavController(view).navigate(RouteMapping.findIdByRoute(Route.LOGIN));
     }
 }

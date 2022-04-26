@@ -7,18 +7,16 @@
     android:paddingHorizontal="14dp">
 
     <TextView
-        android:id="@+id/btn_login"
+        android:id="@+id/txt_profile"
         android:layout_width="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center_horizontal"
         android:textSize="18sp"
-        android:textColor="#49a5ff"
+        android:textColor="#e3e3e3"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="14dp"
-        android:text="Profile" />
+        android:text="Profile Page" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

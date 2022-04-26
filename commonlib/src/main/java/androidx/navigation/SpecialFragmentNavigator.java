@@ -3,7 +3,6 @@ package androidx.navigation;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -19,7 +18,6 @@ import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.utils.SafeObjects;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +26,17 @@ import java.util.Map;
 /**
  * {@link androidx.navigation.fragment.FragmentNavigator} 使用replace切换Fragment
  * 虽然节省资源但会重新走生命周期
- * {@link HideFragmentNavigator} 使用hide show方式切换fragment
+ * {@link SpecialFragmentNavigator} 使用hide show方式切换fragment
  */
-@Navigator.Name("fragment")
-public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Destination> {
+@Navigator.Name("special")
+public class SpecialFragmentNavigator extends Navigator<SpecialFragmentNavigator.Destination> {
 
     Context context;
     FragmentManager fragmentManager;
     int containerId;
     List<String> savedIds;
 
-    public HideFragmentNavigator(Context context, FragmentManager fragmentManager, int containerId) {
+    public SpecialFragmentNavigator(Context context, FragmentManager fragmentManager, int containerId) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.containerId = containerId;
@@ -141,11 +139,7 @@ public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Desti
         Destination destination = (Destination) entry.getDestination();
         Bundle args = entry.getArguments();
         String className;
-        if (args != null && !TextUtils.isEmpty(args.getString("t"))) {
-            className = destination.getFragmentClass(args.getString("t"));
-        } else {
-            className = destination.getClassName();
-        }
+        className = destination.getClassName();
         if (className.startsWith(".")) {
             className = context.getPackageName() + className;
         }
@@ -246,11 +240,10 @@ public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Desti
     static class Destination extends NavDestination {
 
         String className;
-        Map<String, String> mMap = new HashMap<>();
+        boolean asStarter;
 
         public Destination(@NonNull Navigator<? extends Destination> fragmentNavigator) {
             super(fragmentNavigator);
-            mMap.put("LoginFragment", "com.tsh.navigation.pages.fragments.ProfileFragment");
         }
 
         @Override
@@ -265,12 +258,12 @@ public class HideFragmentNavigator extends Navigator<HideFragmentNavigator.Desti
 
         }
 
-        public String getClassName() {
-            return className;
+        public void setClassName(String className) {
+            this.className = className;
         }
 
-        public String getFragmentClass(String scheme) {
-            return mMap.get(scheme);
+        public String getClassName() {
+            return className;
         }
 
         @Override

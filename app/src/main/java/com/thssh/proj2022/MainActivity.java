@@ -3,8 +3,11 @@ package com.thssh.proj2022;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.timer.IntervalTimer;
@@ -12,11 +15,13 @@ import com.thssh.commonlib.timer.IntervalTimer;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
+    EditText schemeInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        schemeInput = findViewById(R.id.input_scheme);
         testIntervalTimer();
     }
 
@@ -62,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
             ParcelableBean parcelableBean = new ParcelableBean(20, Arrays.asList(new ParcelableBean.InnerBean("zhang")));
             intent.putExtra("parcelable", parcelableBean);
         }
+        startActivity(intent);
+    }
+
+    public void openScheme(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String scheme = schemeInput.getText().toString();
+        Toast.makeText(this, "to: " + scheme, Toast.LENGTH_LONG).show();
+        intent.setData(Uri.parse(scheme));
         startActivity(intent);
     }
 }

@@ -5,7 +5,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
-import navigation.fragment.NavigationFragment;
+import androidx.navigation.fragment.NavigationFragment;
 
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.simple.SimpleTextWatcher;

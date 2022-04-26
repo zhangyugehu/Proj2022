@@ -10,13 +10,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
+import androidx.navigation.config.RouteMapping;
+import androidx.navigation.fragment.HideNavHostFragment;
 
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.simple.SimpleTextWatcher;
 import com.thssh.commonlib.utils.SafeObjects;
 import com.thssh.commonlib.views.LoadingWrapper;
 import com.tsh.navigation.R;
-import com.tsh.navigation.repos.UserRepo;
+import com.tsh.navigation.consts.Route;
 import com.tsh.navigation.state.AuthState;
 import com.tsh.navigation.state.Store;
 import com.tsh.navigation.state.UserState;
@@ -78,7 +80,8 @@ public class LoginFragment extends BaseFragment {
         Bundle bundle = new Bundle();
         bundle.putString("username", authState.username);
         bundle.putString("password", authState.password);
-        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment, bundle);
+//        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment, bundle);
+        Navigation.findNavController(view).navigate(RouteMapping.findIdByRoute(Route.REGISTER), bundle);
     }
 
     private void onLoginClick(View view) {
@@ -96,9 +99,8 @@ public class LoginFragment extends BaseFragment {
 
             @Override
             public void onFinish() {
-                userState.<UserState>setState(state -> {
-                    state.token = UUID.randomUUID().toString();
-                });
+                userState.<UserState>setState(state -> state.token = UUID.randomUUID().toString());
+                HideNavHostFragment.findNavController(LoginFragment.this).navigate(Route.MAIN);
                 LoadingWrapper.with(view).dismiss();
             }
         }.start();
