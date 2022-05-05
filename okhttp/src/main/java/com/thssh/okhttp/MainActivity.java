@@ -1,16 +1,13 @@
 package com.thssh.okhttp;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.thssh.commonlib.activity.BaseActivity;
 import com.thssh.commonlib.executor.Executors;
-import com.thssh.commonlib.executor.MainExecutor;
 import com.thssh.commonlib.executor.ThreadChecker;
 import com.thssh.commonlib.logger.L;
 import com.thssh.commonlib.views.LoadingWrapper;
@@ -20,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.AsyncTimeout;
 
@@ -39,6 +36,54 @@ public class MainActivity extends BaseActivity implements Callback {
         setContentView(R.layout.activity_main);
         hello = findViewById(R.id.hello);
 
+//        normalRequest();
+
+//        traceRequest();
+
+        for (int i = 0; i < 100; i++) {
+            multiThreadHeaderModify();
+        }
+
+    }
+
+    private static final String GITHUB_ZEN = "https://api.github.com/zen";
+    private static final String QUOTE_INFO = "https://transformer-web--develop-02.bbaecache.com/api/v2/market/getQuoteInfo";
+
+    private void multiThreadHeaderModify() {
+        Request.Builder requestBuilder = new Request.Builder();
+        Request trace = requestBuilder.url(QUOTE_INFO).build();
+        OkClient.getClient(60).newCall(trace).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                L.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                assert response.body() != null;
+                L.d("onResponse", response.body().string());
+            }
+        });
+    }
+
+    private void traceRequest() {
+        Request.Builder requestBuilder = new Request.Builder();
+        Request trace = requestBuilder.method("TRACE", null).url("https://bbaecache.com").tag("tag-trace").build();
+        OkClient.getClient(60).newCall(trace).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                L.d("onFailure", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                assert response.body() != null;
+                L.d("onResponse", response.body().string());
+            }
+        });
+    }
+
+    private void normalRequest() {
         try {
             LoadingWrapper.with(hello).show();
         } catch (Exception e) {
@@ -46,7 +91,7 @@ public class MainActivity extends BaseActivity implements Callback {
         }
         start = System.currentTimeMillis();
         Executors.single().execute(() -> {
-            Call call = OkClient.INSTANCE.getClient(60).newCall(new Request.Builder()
+            Call call = OkClient.getClient(60).newCall(new Request.Builder()
                     .url("https://www.google.com")
                     .get().build());
             try {

@@ -40,6 +40,8 @@ public class SpecialFragmentNavigator extends Navigator<SpecialFragmentNavigator
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.containerId = containerId;
+
+        fragmentManager.addOnBackStackChangedListener(() -> L.d("OnBackStackChanged"));
         fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
             @Override
             public void onFragmentPaused(@NonNull FragmentManager fm, @NonNull Fragment f) {
