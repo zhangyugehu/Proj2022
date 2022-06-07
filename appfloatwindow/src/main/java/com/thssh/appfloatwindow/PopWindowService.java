@@ -10,16 +10,25 @@ import android.graphics.Point;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.thssh.commonlib.logger.L;
 
-public class PopWindowService extends Service implements FloatRelativeLayout.OnMoveListener {
+public class PopWindowService extends Service implements WindowManagerMoveDelegate.OnMoveListener {
+
+    @Override
+    public void onMove(float dx, float dy) {
+        if (windowManager != null && mParam != null && rootView != null) {
+            mParam.x = (int) dx;
+            mParam.y = (int) dy;
+            windowManager.updateViewLayout(rootView, mParam);
+        }
+    }
 
     class InnerBinder extends Binder {
         public PopWindowService getService() {
@@ -42,37 +51,41 @@ public class PopWindowService extends Service implements FloatRelativeLayout.OnM
         return mBinder;
     }
 
-    FloatRelativeLayout root;
+    FloatRelativeLayout rootView;
     MutableContextWrapper contextWrapper;
-    TextView textView;
+    View contentView;
 
-    public View getRootView(Context context) {
+    public <T extends View> T getContentView() {
+        return (T)contentView;
+    }
+
+    public void initRootView(Context context) {
+//        Context context = getBaseContext();
         L.d("getRootView");
-        if (root == null) {
+        if (rootView == null) {
             L.d("createView");
             contextWrapper = new MutableContextWrapper(context);
-            root = new FloatRelativeLayout(context);
-            root.setOnClickListener((v) -> Toast.makeText(context, "FloatRelativeLayout", Toast.LENGTH_LONG).show());
-            root.setOnMoveListener(this);
-            textView = new TextView(context);
-            textView.setText("Hahahahah");
-//            textView.setOnClickListener((v) -> Toast.makeText(context, textView.getText(), Toast.LENGTH_LONG).show());
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-            textView.setTextColor(Color.parseColor("#ff2fa9"));
-            root.addView(textView);
+            rootView = new FloatRelativeLayout(context);
+            rootView.setOnClickListener((v) -> Toast.makeText(context, "FloatRelativeLayout", Toast.LENGTH_LONG).show());
+            rootView.setOnMoveListener(this);
+            addOnlyOneContentViewToRoot();
         } else {
             L.d("setBaseContext");
             contextWrapper.setBaseContext(context);
         }
-        return root;
     }
 
-    @Override
-    public void onMoved(Point point) {
-        if (windowManager != null && mParam != null && root != null) {
-            mParam.x = point.x;
-            mParam.y = point.y;
-            windowManager.updateViewLayout(root, mParam);
+    public void setContentView(View contentView) {
+        if (contentView != null) {
+            this.contentView = contentView;
+            addOnlyOneContentViewToRoot();
+        }
+    }
+
+    private void addOnlyOneContentViewToRoot() {
+        if (rootView != null && contentView != null) {
+            rootView.removeAllViews();
+            rootView.addView(contentView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
     }
 
@@ -86,22 +99,17 @@ public class PopWindowService extends Service implements FloatRelativeLayout.OnM
             params.y = mParam.y;
         }
         mParam = params;
-        params.flags =
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-//                    | WindowManager.LayoutParams.FLAG_FULLSCREEN
-                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-//                    | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-        ;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.gravity = Gravity.START;
+        params.gravity = Gravity.CENTER;
         params.format = PixelFormat.TRANSLUCENT;
 //        params.windowAnimations = R.style.topTipsAnim;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
-        View rootView = getRootView(context);
-
+        initRootView(context);
         if (windowManager != null) {
             try {
                 L.d("removeView");

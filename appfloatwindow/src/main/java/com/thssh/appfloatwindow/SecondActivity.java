@@ -8,13 +8,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.thssh.commonlib.logger.L;
 
 /**
  * @author hutianhang
  */
-public class SecondActivity extends PopWindowActivity {
+public class SecondActivity extends AppCompatActivity {
     public SecondActivity() {
         L.d("SecondActivity", L.getStackTracesPlain(20));
     }
@@ -50,16 +53,19 @@ public class SecondActivity extends PopWindowActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (popService != null) {
-                    popService.textView.setText("tick: " + millisUntilFinished);
-                    popService.textView.setTextColor((int) (millisUntilFinished * Color.RED));
-                    updateWindow();
+                    PopView popView = popService.getContentView();
+                    TextView textView = popView.getTextView();
+                    textView.setText("tick: " + millisUntilFinished);
+                    textView.setTextColor((int) (millisUntilFinished * Color.RED));
                 }
             }
 
             @Override
             public void onFinish() {
                 if (popService != null) {
-                    popService.textView.setText("finished.");
+                    PopView popView = popService.getContentView();
+                    TextView textView = popView.getTextView();
+                    textView.setText("finished.");
                 }
             }
         }.start();

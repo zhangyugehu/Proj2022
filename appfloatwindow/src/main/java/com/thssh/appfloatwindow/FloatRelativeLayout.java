@@ -30,21 +30,14 @@ public class FloatRelativeLayout extends RelativeLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        setBackgroundColor(Color.YELLOW);
+        setBackgroundColor(Color.parseColor("#80F0F0F0"));
     }
-
-    private float firstX = -1;
-    private float firstY = -1;
     private boolean isClick;
     long lastDownTime = -1;
-    OnMoveListener listener;
+    WindowManagerMoveDelegate moveDelegate;
 
-    interface OnMoveListener {
-        void onMoved(Point point);
-    }
-
-    public void setOnMoveListener(OnMoveListener moveListener) {
-        this.listener = moveListener;
+    public void setOnMoveListener(WindowManagerMoveDelegate.OnMoveListener listener) {
+        moveDelegate = new WindowManagerMoveDelegate(listener);
     }
 
     Point cache = new Point();
@@ -58,36 +51,19 @@ public class FloatRelativeLayout extends RelativeLayout {
         return min;
     }
 
-    int tx;
-    int ty;
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        if (moveDelegate != null) {
+            moveDelegate.onTouchEvent(event);
+        }
         int action=event.getAction();
         switch (action){
             case MotionEvent.ACTION_DOWN:
                 lastDownTime = System.currentTimeMillis();
-                if (firstX == -1) firstX = event.getRawX();
-                if (firstY == -1) firstY = event.getRawY();
-                tx = (int) event.getX();
-                ty = (int) event.getY();
-//                L.d("down", firstX, firstY);
                 isClick = true;
                 break;
             case MotionEvent.ACTION_MOVE:
-                float dx = event.getRawX() - firstX - tx + (getWidth()>>2);
-                float dy = event.getRawY() - firstY - ty + (getHeight()>>2);
-                int slop = getTouchSlop();
-                if(dx * dx + dy * dy > slop * slop){
-                    if (listener != null) {
-                        cache.x = (int) dx;
-                        cache.y= (int) dy;
-//                        L.d("move", cache.x, cache.y, event.getX(), event.getY());
-                        listener.onMoved(cache);
-                    }
-                    isClick=false;
-                }
+                isClick=false;
                 break;
             case MotionEvent.ACTION_UP:
                 if (isClick) {

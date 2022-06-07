@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.thssh.commonlib.logger.L;
 
-public class MainActivity extends PopWindowActivity {
+public class MainActivity extends AppCompatActivity {
     PopWindowService popService;
 
     public MainActivity() {
@@ -59,6 +59,7 @@ public class MainActivity extends PopWindowActivity {
         if (popService != null) {
             L.d("showWindow");
 //            showWindow(popService.getRootView(this));
+            popService.setContentView(new PopView(this));
             popService.showWindow(this);
         } else {
             getWindow().getDecorView().postDelayed(this::showWindowWhenConnected, 500);

@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ASMIdeaPluginConfiguration">
-    <asm skipDebug="false" skipFrames="false" skipCode="false" expandFrames="false" />
-    <groovy codeStyle="LEGACY" />
-  </component>
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
@@ -17,6 +13,7 @@
         <entry key="app/src/main/res/layout/activity_second.xml" value="0.37604166666666666" />
         <entry key="appfloatwindow/src/main/res/layout/activity_main.xml" value="0.12083333333333333" />
         <entry key="appfloatwindow/src/main/res/layout/activity_second.xml" value="0.12083333333333333" />
+        <entry key="changelanguageinternal/src/main/res/layout/activity_main.xml" value="0.17962962962962964" />
         <entry key="customview/src/main/res/drawable/ic_launcher_background.xml" value="0.1605" />
         <entry key="customview/src/main/res/layout/activity_main.xml" value="0.16354166666666667" />
         <entry key="customview/src/main/res/layout/activity_paint.xml" value="0.23072916666666668" />
@@ -43,6 +40,7 @@
         <entry key="navigation2/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="okhttp/src/main/res/layout/activity_main.xml" value="0.14479166666666668" />
         <entry key="recyclerview/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="simpleutil/src/main/res/layout/activity_main.xml" value="0.27794871794871795" />
         <entry key="thefour/src/main/res/layout/activity_first.xml" value="0.37604166666666666" />
         <entry key="thefour/src/main/res/layout/activity_lifecycle.xml" value="0.37604166666666666" />
         <entry key="thefour/src/main/res/layout/activity_main.xml" value="0.14895833333333333" />
@@ -50,6 +48,7 @@
         <entry key="thefour/src/main/res/layout/activity_starter.xml" value="0.37604166666666666" />
         <entry key="touchevent/src/main/res/layout/activity_event1.xml" value="0.2919369786839666" />
         <entry key="touchevent/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="touchevent/src/main/res/layout/activity_main2.xml" value="0.37604166666666666" />
         <entry key="touchevent/src/main/res/layout/activity_main_2.xml" value="0.37604166666666666" />
         <entry key="workmanager/src/main/res/layout/activity_main.xml" value="0.37604166666666666" />
       </map>

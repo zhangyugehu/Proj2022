@@ -5,18 +5,26 @@
       <module name="Proj2022.activitygc" target="11" />
       <module name="Proj2022.app" target="11" />
       <module name="Proj2022.appfloatwindow" target="11" />
+      <module name="Proj2022.changelanguageinternal" target="11" />
       <module name="Proj2022.commonlib" target="11" />
       <module name="Proj2022.crypto" target="1.8" />
+      <module name="Proj2022.crypto.main" target="1.8" />
+      <module name="Proj2022.crypto.test" target="1.8" />
       <module name="Proj2022.customview" target="11" />
       <module name="Proj2022.glide" target="11" />
       <module name="Proj2022.javacommon" target="11" />
+      <module name="Proj2022.javacommon.main" target="11" />
+      <module name="Proj2022.javacommon.test" target="11" />
       <module name="Proj2022.launchmode" target="11" />
       <module name="Proj2022.leakcanary" target="11" />
       <module name="Proj2022.leetcode" target="11" />
+      <module name="Proj2022.leetcode.main" target="11" />
+      <module name="Proj2022.leetcode.test" target="11" />
       <module name="Proj2022.navigation" target="11" />
       <module name="Proj2022.navigation2" target="11" />
       <module name="Proj2022.okhttp" target="11" />
       <module name="Proj2022.recyclerview" target="11" />
+      <module name="Proj2022.simpleutil" target="11" />
       <module name="Proj2022.thefour" target="11" />
       <module name="Proj2022.touchevent" target="11" />
       <module name="Proj2022.workmanager" target="11" />
