@@ -36,6 +36,15 @@ public class SecondActivity extends AppCompatActivity {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 if (service instanceof PopWindowService.InnerBinder) {
                     popService = ((PopWindowService.InnerBinder) service).getService();
+                    if (popService != null) {
+                        PopView popView = popService.getContentView();
+//                        if (popView != null) {
+//                            ViewGroup.LayoutParams lp = popView.getTextView().getLayoutParams();
+//                            lp.height = UI.dpi(100);
+//                            lp.width = UI.dpi(100);
+//                            popView.getTextView().setLayoutParams(lp);
+//                        }
+                    }
                     L.d("SecondActivity", "onServiceConnected: ", popService.hashCode());
                 } else {
                     throw new IllegalArgumentException("onServiceConnected Unsupported.");
@@ -54,9 +63,8 @@ public class SecondActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 if (popService != null) {
                     PopView popView = popService.getContentView();
-                    TextView textView = popView.getTextView();
-                    textView.setText("tick: " + millisUntilFinished);
-                    textView.setTextColor((int) (millisUntilFinished * Color.RED));
+                    popView.setLabel("tick: " + millisUntilFinished);
+                    popView.setTextColor((int) (millisUntilFinished * Color.RED));
                 }
             }
 
@@ -64,8 +72,7 @@ public class SecondActivity extends AppCompatActivity {
             public void onFinish() {
                 if (popService != null) {
                     PopView popView = popService.getContentView();
-                    TextView textView = popView.getTextView();
-                    textView.setText("finished.");
+                    popView.setLabel("finished.");
                 }
             }
         }.start();

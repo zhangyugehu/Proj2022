@@ -11,8 +11,13 @@
         <entry key="activitygc/src/main/res/layout/fragment_transition.xml" value="0.23072916666666668" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14479166666666668" />
         <entry key="app/src/main/res/layout/activity_second.xml" value="0.37604166666666666" />
+        <entry key="appfloatwindow/src/main/res/drawable/shape_pop.xml" value="0.181" />
+        <entry key="appfloatwindow/src/main/res/drawable/shape_pop_circle_1.xml" value="0.181" />
+        <entry key="appfloatwindow/src/main/res/drawable/shape_pop_circle_2.xml" value="0.181" />
         <entry key="appfloatwindow/src/main/res/layout/activity_main.xml" value="0.12083333333333333" />
         <entry key="appfloatwindow/src/main/res/layout/activity_second.xml" value="0.12083333333333333" />
+        <entry key="appfloatwindow/src/main/res/layout/popview.xml" value="0.37604166666666666" />
+        <entry key="appfloatwindow/src/main/res/layout/view_pop.xml" value="0.375" />
         <entry key="changelanguageinternal/src/main/res/layout/activity_main.xml" value="0.17962962962962964" />
         <entry key="customview/src/main/res/drawable/ic_launcher_background.xml" value="0.1605" />
         <entry key="customview/src/main/res/layout/activity_main.xml" value="0.16354166666666667" />

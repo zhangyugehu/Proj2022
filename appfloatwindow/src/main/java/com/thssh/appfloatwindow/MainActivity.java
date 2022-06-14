@@ -13,13 +13,16 @@ import android.os.IBinder;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.thssh.commonlib.logger.L;
+import com.thssh.commonlib.utils.UI;
 
 public class MainActivity extends AppCompatActivity {
     PopWindowService popService;
+    PopView popView;
 
     public MainActivity() {
         L.d("MainActivity", L.getStackTracesPlain(8));
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        popView = new PopView(this);
 
         Intent intent = new Intent(this, PopWindowService.class);
         startService(intent);
@@ -59,10 +63,27 @@ public class MainActivity extends AppCompatActivity {
         if (popService != null) {
             L.d("showWindow");
 //            showWindow(popService.getRootView(this));
-            popService.setContentView(new PopView(this));
+            popService.setContentView(popView);
             popService.showWindow(this);
         } else {
             getWindow().getDecorView().postDelayed(this::showWindowWhenConnected, 500);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (popService != null) {
+            popService.hideWidow(this);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (popService != null && popService.getContentView() != null) {
+            PopView popView = popService.getContentView();
+            popService.hideWidow(this);
         }
     }
 

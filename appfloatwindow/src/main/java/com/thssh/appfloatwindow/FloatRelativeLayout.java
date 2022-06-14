@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -15,100 +18,120 @@ import com.thssh.commonlib.logger.L;
 import java.lang.reflect.Field;
 
 public class FloatRelativeLayout extends RelativeLayout {
+    public interface IDraggable {
+        void onDrag(MotionEvent event);
+        void onRelease(MotionEvent event);
+        void onMove(MotionEvent event);
+        void onTap();
+    }
+
+    private final GestureDetector gestureDetector;
+
+    private float downX;
+    private float downY;
+    private float offsetX;
+    private float offsetY;
+
+    private boolean moveInActive;
+
+    private IDraggable draggableView;
+
     public FloatRelativeLayout(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public FloatRelativeLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public FloatRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent event) {
+//                L.d("onSingleTapUp");
+                if (draggableView != null) {
+                    draggableView.onTap();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent event, float distanceX, float distanceY) {
+//                L.d("onScroll", distanceX, distanceY);
+                return false;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                moveInActive = true;
+                downX = e.getRawX();
+                downY = e.getRawY();
+                // 收起popView
+                if (draggableView != null) {
+                    draggableView.onDrag(e);
+                }
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                L.d("onFling", velocityX, velocityY);
+                return false;
+            }
+        });
+    }
+
+    private WindowManagerMoveDelegate.OnMoveListener listener;
+    public void setOnMoveListener(WindowManagerMoveDelegate.OnMoveListener listener) {
+        this.listener = listener;
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        setBackgroundColor(Color.parseColor("#80F0F0F0"));
-    }
-    private boolean isClick;
-    long lastDownTime = -1;
-    WindowManagerMoveDelegate moveDelegate;
-
-    public void setOnMoveListener(WindowManagerMoveDelegate.OnMoveListener listener) {
-        moveDelegate = new WindowManagerMoveDelegate(listener);
-    }
-
-    Point cache = new Point();
-    ViewConfiguration vc = ViewConfiguration.get(getContext());
-    int min = -1;
-
-    private int getTouchSlop() {
-        if (min == -1) {
-            min = vc.getScaledTouchSlop();
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        if (child instanceof IDraggable) {
+            draggableView = (IDraggable) child;
         }
-        return min;
+        super.addView(child, index, params);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (moveDelegate != null) {
-            moveDelegate.onTouchEvent(event);
-        }
-        int action=event.getAction();
-        switch (action){
-            case MotionEvent.ACTION_DOWN:
-                lastDownTime = System.currentTimeMillis();
-                isClick = true;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                isClick=false;
-                break;
-            case MotionEvent.ACTION_UP:
-                if (isClick) {
-                    long curTime = System.currentTimeMillis();
-                    if (curTime - lastDownTime > 1_500) {
-                        L.d("performLongClick");
-                        performLongClick();
-                    } else {
-                        L.d("performClick");
-                        performClick();
+        if (moveInActive) {
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_MOVE:
+                    if (moveInActive && listener != null) {
+                        if (draggableView != null) {
+                            draggableView.onMove(event);
+                        }
+                        float dx = event.getRawX() - downX + offsetX;
+                        float dy = event.getRawY() - downY + offsetY;
+                        listener.onMove(dx, dy);
                     }
-                }
-                break;
-        }
-        return false;
-    }
-
-
-    private static int STATUS_BAR_HEIGHT;
-    /**
-     * 状态栏高度
-     */
-    public static int getStatusBarHeight(@NonNull Context context) {
-        if (STATUS_BAR_HEIGHT != 0) {
-            return STATUS_BAR_HEIGHT;
-        }
-        int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resId > 0) {
-            STATUS_BAR_HEIGHT = context.getResources().getDimensionPixelOffset(resId);
-        }
-        if (STATUS_BAR_HEIGHT <= 0) {
-            Class<?> c = null;
-            Object obj = null;
-            Field field = null;
-            int x = 0;
-            try {
-                c = Class.forName("com.android.internal.R$dimen");
-                obj = c.newInstance();
-                field = c.getField("status_bar_height");
-                x = Integer.parseInt(field.get(obj).toString());
-                STATUS_BAR_HEIGHT = context.getResources().getDimensionPixelSize(x);
-            } catch (Exception e1) {
-                e1.printStackTrace();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    // 恢复收起前的状态
+                    if (draggableView != null) {
+                        draggableView.onRelease(event);
+                    }
+                    offsetX += event.getRawX() - downX;
+                    offsetY += event.getRawY() - downY;
+                    moveInActive = false;
+                    break;
             }
         }
-        return STATUS_BAR_HEIGHT;
+        return gestureDetector.onTouchEvent(event);
     }
+
 }

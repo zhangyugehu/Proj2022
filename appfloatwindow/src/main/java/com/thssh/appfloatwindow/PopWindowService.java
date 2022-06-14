@@ -4,18 +4,14 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.MutableContextWrapper;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.graphics.Point;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.thssh.commonlib.logger.L;
 
@@ -66,9 +62,8 @@ public class PopWindowService extends Service implements WindowManagerMoveDelega
             L.d("createView");
             contextWrapper = new MutableContextWrapper(context);
             rootView = new FloatRelativeLayout(context);
-            rootView.setOnClickListener((v) -> Toast.makeText(context, "FloatRelativeLayout", Toast.LENGTH_LONG).show());
             rootView.setOnMoveListener(this);
-            addOnlyOneContentViewToRoot();
+            addOnlyOneChildToRoot();
         } else {
             L.d("setBaseContext");
             contextWrapper.setBaseContext(context);
@@ -76,13 +71,14 @@ public class PopWindowService extends Service implements WindowManagerMoveDelega
     }
 
     public void setContentView(View contentView) {
+        // TODO: 2022/6/7 remove old
         if (contentView != null) {
             this.contentView = contentView;
-            addOnlyOneContentViewToRoot();
+            addOnlyOneChildToRoot();
         }
     }
 
-    private void addOnlyOneContentViewToRoot() {
+    private void addOnlyOneChildToRoot() {
         if (rootView != null && contentView != null) {
             rootView.removeAllViews();
             rootView.addView(contentView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -91,6 +87,13 @@ public class PopWindowService extends Service implements WindowManagerMoveDelega
 
     WindowManager windowManager;
     WindowManager.LayoutParams mParam;
+
+    public void hideWidow(Context context) {
+        windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+        if (rootView.getParent() == null) {
+            windowManager.removeView(rootView);
+        }
+    }
 
     protected void showWindow(Context context) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION);
@@ -103,7 +106,7 @@ public class PopWindowService extends Service implements WindowManagerMoveDelega
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.gravity = Gravity.CENTER;
+//        params.gravity = Gravity.END|Gravity.TOP;
         params.format = PixelFormat.TRANSLUCENT;
 //        params.windowAnimations = R.style.topTipsAnim;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

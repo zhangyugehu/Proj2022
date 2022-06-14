@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_pop_background"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_circle_left"
+        app:constraint_referenced_ids="circle_left_1, circle_left_2, circle_left_3, circle_left_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <View
+        android:id="@+id/circle_left_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:alpha="0.2"
+        android:background="@drawable/shape_pop_circle" />
+    <View
+        android:id="@+id/circle_left_2"
+        app:layout_constraintStart_toStartOf="@id/circle_left_1"
+        app:layout_constraintEnd_toEndOf="@id/circle_left_1"
+        app:layout_constraintTop_toTopOf="@id/circle_left_1"
+        app:layout_constraintBottom_toBottomOf="@id/circle_left_1"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:alpha="0.5"
+        android:background="@drawable/shape_pop_circle" />
+    <View
+        android:id="@+id/circle_left_3"
+        app:layout_constraintStart_toStartOf="@id/circle_left_1"
+        app:layout_constraintEnd_toEndOf="@id/circle_left_1"
+        app:layout_constraintTop_toTopOf="@id/circle_left_1"
+        app:layout_constraintBottom_toBottomOf="@id/circle_left_1"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:background="@drawable/shape_pop_circle" />
+
+    <TextView
+        android:id="@+id/circle_left_4"
+        app:layout_constraintStart_toStartOf="@id/circle_left_1"
+        app:layout_constraintEnd_toEndOf="@id/circle_left_1"
+        app:layout_constraintTop_toTopOf="@id/circle_left_1"
+        app:layout_constraintBottom_toBottomOf="@id/circle_left_1"
+        android:text="IC"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_circle_right"
+        android:visibility="gone"
+        app:constraint_referenced_ids="circle_right_1, circle_right_2, circle_right_3, circle_right_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/circle_right_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:alpha="0.2"
+        android:background="@drawable/shape_pop_circle" />
+    <View
+        android:id="@+id/circle_right_2"
+        app:layout_constraintStart_toStartOf="@id/circle_right_1"
+        app:layout_constraintEnd_toEndOf="@id/circle_right_1"
+        app:layout_constraintTop_toTopOf="@id/circle_right_1"
+        app:layout_constraintBottom_toBottomOf="@id/circle_right_1"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:alpha="0.5"
+        android:background="@drawable/shape_pop_circle" />
+    <View
+        android:id="@+id/circle_right_3"
+        app:layout_constraintStart_toStartOf="@id/circle_right_1"
+        app:layout_constraintEnd_toEndOf="@id/circle_right_1"
+        app:layout_constraintTop_toTopOf="@id/circle_right_1"
+        app:layout_constraintBottom_toBottomOf="@id/circle_right_1"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:background="@drawable/shape_pop_circle" />
+
+    <TextView
+        android:id="@+id/circle_right_4"
+        app:layout_constraintStart_toStartOf="@id/circle_right_1"
+        app:layout_constraintEnd_toEndOf="@id/circle_right_1"
+        app:layout_constraintTop_toTopOf="@id/circle_right_1"
+        app:layout_constraintBottom_toBottomOf="@id/circle_right_1"
+        android:text="IC"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/box_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintTop_toTopOf="@id/circle_left_1"
+        app:layout_constraintBottom_toBottomOf="@id/circle_left_1"
+        app:layout_constraintStart_toEndOf="@id/circle_left_1"
+        app:layout_constraintEnd_toStartOf="@id/circle_right_1"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="40dp">
+
+        <TextView
+            android:id="@+id/txt_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:maxWidth="115dp"
+            android:textSize="11sp"
+            android:textColor="@color/black"
+            android:text="小河豚是个大厉害分享了一个开仓订单"
+            tools:text="小河豚是个大厉害分享了一个开仓订单"
+            android:maxLines="2"
+            android:layout_marginHorizontal="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txt_content_hold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            android:maxWidth="115dp"
+            android:textSize="11sp"
+            android:textColor="@color/black"
+            tools:text="小河豚是个大厉害分享了一个开仓订单"
+            android:maxLines="2"
+            android:layout_marginEnd="13dp"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
