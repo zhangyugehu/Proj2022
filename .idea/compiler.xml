@@ -6,6 +6,7 @@
       <module name="Proj2022.app" target="11" />
       <module name="Proj2022.appfloatwindow" target="11" />
       <module name="Proj2022.changelanguageinternal" target="11" />
+      <module name="Proj2022.chart" target="11" />
       <module name="Proj2022.commonlib" target="11" />
       <module name="Proj2022.crypto" target="1.8" />
       <module name="Proj2022.crypto.main" target="1.8" />

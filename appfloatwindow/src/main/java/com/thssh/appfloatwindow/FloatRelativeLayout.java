@@ -50,7 +50,14 @@ public class FloatRelativeLayout extends RelativeLayout {
 
             @Override
             public boolean onDown(MotionEvent e) {
-                return false;
+                moveInActive = true;
+                downX = e.getRawX();
+                downY = e.getRawY();
+                // 收起popView
+                if (draggableView != null) {
+                    draggableView.onDrag(e);
+                }
+                return true;
             }
 
             @Override
@@ -60,11 +67,11 @@ public class FloatRelativeLayout extends RelativeLayout {
 
             @Override
             public boolean onSingleTapUp(MotionEvent event) {
-//                L.d("onSingleTapUp");
+                L.d("onSingleTapUp");
                 if (draggableView != null) {
                     draggableView.onTap();
                 }
-                return false;
+                return true;
             }
 
             @Override
@@ -75,13 +82,6 @@ public class FloatRelativeLayout extends RelativeLayout {
 
             @Override
             public void onLongPress(MotionEvent e) {
-                moveInActive = true;
-                downX = e.getRawX();
-                downY = e.getRawY();
-                // 收起popView
-                if (draggableView != null) {
-                    draggableView.onDrag(e);
-                }
             }
 
             @Override
@@ -107,6 +107,17 @@ public class FloatRelativeLayout extends RelativeLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+//        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+//            L.d("onTouchEvent ACTION_DOWN");
+//            moveInActive = true;
+//            downX = event.getRawX();
+//            downY = event.getRawY();
+//            // 收起popView
+//            if (draggableView != null) {
+//                draggableView.onDrag(event);
+//            }
+//            return false;
+//        }
         if (moveInActive) {
             int action = event.getAction();
             switch (action) {

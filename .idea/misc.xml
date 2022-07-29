@@ -15,7 +15,9 @@
         <entry key="appfloatwindow/src/main/res/drawable/shape_pop_circle_1.xml" value="0.181" />
         <entry key="appfloatwindow/src/main/res/drawable/shape_pop_circle_2.xml" value="0.181" />
         <entry key="appfloatwindow/src/main/res/layout/activity_main.xml" value="0.12083333333333333" />
+        <entry key="appfloatwindow/src/main/res/layout/activity_main2.xml" value="0.37604166666666666" />
         <entry key="appfloatwindow/src/main/res/layout/activity_second.xml" value="0.12083333333333333" />
+        <entry key="appfloatwindow/src/main/res/layout/activity_second2.xml" value="0.37604166666666666" />
         <entry key="appfloatwindow/src/main/res/layout/popview.xml" value="0.37604166666666666" />
         <entry key="appfloatwindow/src/main/res/layout/view_pop.xml" value="0.375" />
         <entry key="changelanguageinternal/src/main/res/layout/activity_main.xml" value="0.17962962962962964" />

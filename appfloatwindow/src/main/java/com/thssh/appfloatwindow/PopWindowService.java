@@ -102,8 +102,8 @@ public class PopWindowService extends Service implements WindowManagerMoveDelega
             params.y = mParam.y;
         }
         mParam = params;
-        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
 //        params.gravity = Gravity.END|Gravity.TOP;

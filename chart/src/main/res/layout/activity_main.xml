@@ -1,24 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
+    android:background="#18222B"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
 
-    <com.tsh.chart.PieChart
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <com.tsh.chart.LabelPieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:padding="14dp"
+        app:layout_constraintEnd_toStartOf="@id/percent_chart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="100dp" />
+    <com.tsh.chart.LabelCirclePercentChart
+        android:id="@+id/percent_chart"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:padding="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/pie_chart"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tsh.chart.ProgressChart
+    <com.tsh.chart.LinePieChart
+        android:id="@+id/line_pie_chart"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pie_chart"
+        android:layout_width="match_parent"
+        android:paddingHorizontal="14dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/line_percent_chart_title"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/line_percent_chart"
+        app:layout_constraintTop_toBottomOf="@id/line_pie_chart"
+        android:text="制造业"
+        android:textSize="13sp"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</LinearLayout>
+    <com.tsh.chart.LinePercentChart
+        android:id="@+id/line_percent_chart"
+        app:layout_constraintStart_toEndOf="@id/line_percent_chart_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/line_percent_chart_title"
+        app:layout_constraintBottom_toBottomOf="@id/line_percent_chart_title"
+        android:layout_width="0dp"
+        android:paddingVertical="14dp"
+        android:paddingEnd="14dp"
+        android:layout_height="wrap_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
