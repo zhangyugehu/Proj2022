@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PieChart">
+        <attr name="pieEmptyColor" format="color" />
+        <attr name="pieWidth" format="dimension" />
+        <attr name="pieFactor" format="float" />
+        <attr name="pieDivideAngle" format="float" />
+        <attr name="pieAnimateDuration" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="LabelPieChart">
+        <attr name="pieTextSize" format="dimension" />
+        <attr name="pieTypeface" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="CirclePercentChart">
+        <attr name="circlePercentPercent" format="float" />
+        <attr name="circlePercentWidth" format="dimension" />
+        <attr name="circlePercentAnimateDuration" format="integer" />
+        <attr name="circlePercentColor" format="color" />
+        <attr name="circlePercentActiveColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="LabelCirclePercentChart">
+        <attr name="circlePercentTextSize" format="dimension" />
+        <attr name="circlePercentTextColor" format="color" />
+        <attr name="circlePercentText" format="string|reference" />
+        <attr name="circlePercentTypeface" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="LinePieChart">
+        <attr name="linePieWidth" format="dimension" />
+        <attr name="linePieEmptyColor" format="color" />
+        <attr name="linePieAnimation" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="LinePercentChart">
+        <attr name="linePercentWidth" format="dimension" />
+        <attr name="linePercentColor" format="color" />
+        <attr name="linePercentAnimation" format="integer" />
+        <attr name="linePercentTextPadding" format="dimension" />
+        <attr name="linePercentTextSize" format="dimension" />
+        <attr name="linePercentTextColor" format="color" />
+        <attr name="linePercentValue" format="float" />
+    </declare-styleable>
+    <declare-styleable name="PointTextView">
+        <attr name="pointSize" format="dimension" />
+        <attr name="pointColor" format="color" />
+        <attr name="pointPadding" format="dimension" />
+    </declare-styleable>
+</resources>

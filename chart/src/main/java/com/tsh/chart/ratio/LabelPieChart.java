@@ -1,6 +1,7 @@
-package com.tsh.chart;
+package com.tsh.chart.ratio;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -11,6 +12,9 @@ import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.tsh.chart.R;
 
 import java.util.List;
 
@@ -24,6 +28,8 @@ public class LabelPieChart extends PieChart {
     private Entry primaryEntry;
     int primaryPosition = -1;
     LabelFormatter labelFormatter;
+    float textSize;
+    Typeface typeface;
 
     public LabelPieChart(Context context) {
         this(context, null);
@@ -35,14 +41,24 @@ public class LabelPieChart extends PieChart {
 
     public LabelPieChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelPieChart)){
+            textSize = typedArray.getDimension(R.styleable.LabelPieChart_pieTextSize,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
+            if (typedArray.hasValue(R.styleable.LabelPieChart_pieTypeface)) {
+                int fontId = typedArray.getResourceId(R.styleable.LabelPieChart_pieTypeface, -1);
+                typeface = ResourcesCompat.getFont(context, fontId);
+            }
+        }
         textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        setTextSize(20);
+    }
+
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
     }
 
     public void setLabelFormatter(LabelFormatter labelFormatter) {
         this.labelFormatter = labelFormatter;
-        postInvalidate();
     }
 
     @Override
@@ -76,16 +92,12 @@ public class LabelPieChart extends PieChart {
         }
     }
 
-    public void setTextSize(float textSize) {
-        textPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSize, getResources().getDisplayMetrics()));
-        invalidate();
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (primaryEntry != null && labelFormatter != null) {
             textPaint.setColor(primaryEntry.color);
+            textPaint.setTextSize(textSize);
             CharSequence label = labelFormatter.format(primaryEntry, primaryPosition);
             canvas.drawText(label, 0, label.length(), circleRectF.centerX(), textCenterY(circleRectF, textPaint),
                     textPaint);

@@ -4,61 +4,271 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#18222B"
+    android:background="#0e161b"
     android:orientation="horizontal"
-    tools:context=".MainActivity">
+    tools:context=".example.MainActivity">
 
-    <com.tsh.chart.LabelPieChart
+    <com.tsh.chart.ratio.LabelPieChart
         android:id="@+id/pie_chart"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="wrap_content"
+        android:layout_height="140dp"
         android:padding="14dp"
         app:layout_constraintEnd_toStartOf="@id/percent_chart"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:pieDivideAngle="3"
+        app:pieEmptyColor="#111C24"
+        app:pieFactor="2"
+        app:pieTextSize="16sp"
+        app:pieWidth="6dp" />
 
-    <com.tsh.chart.LabelCirclePercentChart
+    <com.tsh.chart.percent.LabelCirclePercentChart
         android:id="@+id/percent_chart"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="wrap_content"
+        android:layout_height="140dp"
         android:padding="14dp"
+        app:circlePercentActiveColor="#49A5FF"
+        app:circlePercentColor="#111C24"
+        app:circlePercentPercent="0.6789"
+        app:circlePercentText="数字货币"
+        app:circlePercentTextColor="@color/white"
+        app:circlePercentTextSize="12sp"
+        app:circlePercentWidth="6sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/pie_chart"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tsh.chart.LinePieChart
-        android:id="@+id/line_pie_chart"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pie_chart"
+    <LinearLayout
+        android:id="@+id/layout_pie_chart"
         android:layout_width="match_parent"
-        android:paddingHorizontal="14dp"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/line_percent_chart_title"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/line_percent_chart"
-        app:layout_constraintTop_toBottomOf="@id/line_pie_chart"
-        android:text="制造业"
-        android:textSize="13sp"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.tsh.chart.LinePercentChart
-        android:id="@+id/line_percent_chart"
-        app:layout_constraintStart_toEndOf="@id/line_percent_chart_title"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="14dp"
+        android:background="#18222B"
+        android:orientation="vertical"
+        android:paddingVertical="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/line_percent_chart_title"
-        app:layout_constraintBottom_toBottomOf="@id/line_percent_chart_title"
-        android:layout_width="0dp"
-        android:paddingVertical="14dp"
-        android:paddingEnd="14dp"
-        android:layout_height="wrap_content" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pie_chart">
+
+        <com.tsh.chart.ratio.LinePieChart
+            android:id="@+id/line_pie_chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="14dp"
+            app:linePieAnimation="3000"
+            app:linePieEmptyColor="#111C24"
+            app:linePieWidth="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginTop="15dp">
+
+            <com.tsh.chart.PointTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="盈利 30.00%"
+                app:pointColor="#9253D6"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <com.tsh.chart.PointTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="平衡 2.00%"
+                app:pointColor="#49A5FF"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <com.tsh.chart.PointTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:pointColor="#00B07C"
+                android:text="亏损 68.00%"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_pie_chart">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:text="制造业"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <com.tsh.chart.percent.LinePercentChart
+                android:id="@+id/line_percent_chart_0"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="14dp"
+                android:layout_weight="1"
+                android:paddingVertical="14dp"
+                app:linePercentAnimation="1000"
+                app:linePercentColor="#9775E4"
+                app:linePercentTextColor="@color/white"
+                app:linePercentTextPadding="8dp"
+                app:linePercentTextSize="12sp"
+                app:linePercentValue="0.7" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:text="消费品"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <com.tsh.chart.percent.LinePercentChart
+                android:id="@+id/line_percent_chart_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="14dp"
+                android:layout_weight="1"
+                android:paddingVertical="14dp"
+                app:linePercentAnimation="2000"
+                app:linePercentColor="#49D2C8"
+                app:linePercentTextColor="@color/white"
+                app:linePercentTextSize="12sp"
+                app:linePercentValue="0.0001" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:text="汽车"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <com.tsh.chart.percent.LinePercentChart
+                android:id="@+id/line_percent_chart_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="14dp"
+                android:layout_weight="1"
+                android:paddingVertical="14dp"
+                app:linePercentAnimation="800"
+                app:linePercentColor="#01B07D"
+                app:linePercentTextColor="@color/white"
+                app:linePercentTextSize="12sp"
+                app:linePercentValue="0.9999" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:text="其他"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <com.tsh.chart.percent.LinePercentChart
+                android:id="@+id/line_percent_chart_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="14dp"
+                android:layout_weight="1"
+                android:paddingVertical="14dp"
+                app:linePercentAnimation="4000"
+                app:linePercentColor="#49A5FF"
+                app:linePercentTextColor="@color/white"
+                app:linePercentTextSize="12sp"
+                app:linePercentValue="0.4" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_circle_percent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp">
+
+            <com.tsh.chart.percent.LabelCirclePercentChart
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="7dp"
+                android:layout_weight="1"
+                app:circlePercentActiveColor="#49A5FF"
+                app:circlePercentColor="#111C24"
+                app:circlePercentPercent="0.67"
+                app:circlePercentText="股票"
+                app:circlePercentTextSize="22dp" />
+
+            <com.tsh.chart.percent.LabelCirclePercentChart
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="7dp"
+                android:layout_weight="1"
+                app:circlePercentActiveColor="#49A5FF"
+                app:circlePercentColor="#111C24"
+                app:circlePercentPercent="0.1"
+                app:circlePercentText="期权"
+                app:circlePercentTextSize="22dp" />
+
+            <com.tsh.chart.percent.LabelCirclePercentChart
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="7dp"
+                android:layout_weight="1"
+                app:circlePercentActiveColor="#49A5FF"
+                app:circlePercentColor="#111C24"
+                app:circlePercentPercent="0.1"
+                app:circlePercentText="投顾"
+                app:circlePercentTextSize="22dp" />
+
+            <com.tsh.chart.percent.LabelCirclePercentChart
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="14dp"
+                android:layout_weight="1"
+                app:circlePercentActiveColor="#49A5FF"
+                app:circlePercentColor="#111C24"
+                app:circlePercentPercent="0.2"
+                app:circlePercentText="数字货币"
+                app:circlePercentTextSize="22dp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,9 @@
-package com.tsh.chart;
+package com.tsh.chart.percent;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.Layout;
@@ -12,14 +14,18 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.tsh.chart.R;
 
 public class LabelCirclePercentChart extends CirclePercentChart {
+    private static final boolean DEBUG_SHOW_LIMIT = false;
 
     final TextPaint textPaint;
-    CharSequence label;
+    CharSequence text;
 
-    int labelColor;
-    float labelSize;
+    int textColor;
+    float textSize;
 
     public LabelCirclePercentChart(Context context) {
         this(context, null);
@@ -31,25 +37,35 @@ public class LabelCirclePercentChart extends CirclePercentChart {
 
     public LabelCirclePercentChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelCirclePercentChart)) {
+            textSize = typedArray.getDimension(R.styleable.LabelCirclePercentChart_circlePercentTextSize,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            text = typedArray.getString(R.styleable.LabelCirclePercentChart_circlePercentText);
+            textColor = typedArray.getColor(R.styleable.LabelCirclePercentChart_circlePercentTextColor, Color.LTGRAY);
+            if (typedArray.hasValue(R.styleable.LabelCirclePercentChart_circlePercentTypeface)) {
+                int fontId = typedArray.getResourceId(R.styleable.LabelCirclePercentChart_circlePercentTypeface, -1);
+                setTypeface(ResourcesCompat.getFont(context, fontId));
+            }
+        }
         textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     }
 
-    public void setLabel(CharSequence label, int color, float size) {
-        setLabel(label);
-        setLabelColor(color);
-        setLabelSize(size);
+    public void setText(CharSequence label, int color, float size) {
+        setText(label);
+        setTextColor(color);
+        setTextSize(size);
     }
 
-    public void setLabelSize(float labelSize) {
-        this.labelSize = labelSize;
+    public void setTextSize(float size) {
+        this.textSize = size;
     }
 
-    public void setLabel(CharSequence label) {
-        this.label = label;
+    public void setText(CharSequence text) {
+        this.text = text;
     }
 
-    public void setLabelColor(int color) {
-        this.labelColor = color;
+    public void setTextColor(int color) {
+        this.textColor = color;
     }
 
     public void setTypeface(Typeface typeface) {
@@ -75,14 +91,16 @@ public class LabelCirclePercentChart extends CirclePercentChart {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (!TextUtils.isEmpty(label)) {
-            textPaint.setColor(labelColor);
-            textPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, labelSize, getResources().getDisplayMetrics()));
-//            paint.setAlpha(255/3);
-//            paint.setStrokeWidth(2);
-//            canvas.drawRect(circleRectF, paint);
-//            canvas.drawRect(labelRectF, paint);
-            StaticLayout staticLayout = StaticLayout.Builder.obtain(label, 0, label.length(), textPaint, (int) labelRectF.width())
+        if (!TextUtils.isEmpty(text)) {
+            textPaint.setColor(textColor);
+            textPaint.setTextSize(textSize);
+            if (DEBUG_SHOW_LIMIT) {
+                paint.setAlpha(255 / 3);
+                paint.setStrokeWidth(2);
+                canvas.drawRect(circleRectF, paint);
+                canvas.drawRect(labelRectF, paint);
+            }
+            StaticLayout staticLayout = StaticLayout.Builder.obtain(text, 0, text.length(), textPaint, (int) labelRectF.width())
                     .setMaxLines(2)
                     .setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .setEllipsize(TextUtils.TruncateAt.END)

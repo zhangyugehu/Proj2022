@@ -1,15 +1,20 @@
-package com.tsh.chart;
+package com.tsh.chart.ratio;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+
+import com.tsh.chart.IAnimatorChart;
+import com.tsh.chart.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +51,12 @@ public class LinePieChart extends View implements IAnimatorChart {
 
     public LinePieChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinePieChart)) {
+            strokeWidth = typedArray.getDimension(R.styleable.LinePieChart_linePieWidth,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
+            animateDuration = typedArray.getInt(R.styleable.LinePieChart_linePieAnimation, 1500);
+            emptyColor = typedArray.getColor(R.styleable.LinePieChart_linePieEmptyColor, Color.DKGRAY);
+        }
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeCap(Paint.Cap.ROUND);
         entries = new ArrayList<>();
@@ -53,13 +64,10 @@ public class LinePieChart extends View implements IAnimatorChart {
 
     public void addEntry(Entry entry) {
         entries.add(entry);
-        invalidate();
     }
 
-    public void removeEntry(Entry entry) {
-        if (entries.remove(entry)) {
-            invalidate();
-        }
+    public boolean removeEntry(Entry entry) {
+        return entries.remove(entry);
     }
 
     public void setData(List<Entry> data) {
@@ -72,9 +80,7 @@ public class LinePieChart extends View implements IAnimatorChart {
     }
 
     public void setStrokeWidth(float width) {
-        paint.setStrokeWidth(width);
         strokeWidth = width;
-        invalidate();
     }
 
     public void setEmptyColor(int emptyColor) {
@@ -120,14 +126,6 @@ public class LinePieChart extends View implements IAnimatorChart {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            animateShow();
-        }
-        return super.onTouchEvent(event);
-    }
-
-    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height;
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -155,6 +153,7 @@ public class LinePieChart extends View implements IAnimatorChart {
                 - /*最右边笔帽*/capWidth;
         float nextStart = capWidth + getPaddingStart();
         float endX = getRight() - getPaddingEnd() - (strokeWidth / 2);
+        paint.setStrokeWidth(strokeWidth);
         if (entries.isEmpty()) {
             paint.setColor(emptyColor);
             canvas.drawLine(nextStart, centerY, endX, centerY, paint);

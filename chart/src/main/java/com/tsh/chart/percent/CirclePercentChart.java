@@ -1,17 +1,21 @@
-package com.tsh.chart;
+package com.tsh.chart.percent;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+
+import com.tsh.chart.IAnimatorChart;
+import com.tsh.chart.R;
 
 public class CirclePercentChart extends View implements IAnimatorChart {
     private static final long DEFAULT_ANIMATE_DURATION = 1500;
@@ -23,16 +27,16 @@ public class CirclePercentChart extends View implements IAnimatorChart {
     RectF circleRectF;
     RectF labelRectF;
 
-    float strokeWidth = 20;
+    float strokeWidth;
 
-    int color = Color.LTGRAY;
-    int activeColor = Color.BLUE;
+    int color;
+    int activeColor;
 
-    float percent = 0f;
+    float percent;
 
     float animateProgress = STOP_ANGLE;
 
-    long animateDuration = DEFAULT_ANIMATE_DURATION;
+    long animateDuration;
 
     public CirclePercentChart(Context context) {
         this(context, null);
@@ -44,9 +48,21 @@ public class CirclePercentChart extends View implements IAnimatorChart {
 
     public CirclePercentChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CirclePercentChart)) {
+            percent = typedArray.getFloat(R.styleable.CirclePercentChart_circlePercentPercent, 0);
+            strokeWidth = typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentWidth,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
+            animateDuration = typedArray.getInt(R.styleable.CirclePercentChart_circlePercentAnimateDuration, 1500);
+            color = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentColor, Color.LTGRAY);
+            activeColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentActiveColor, Color.WHITE);
+        }
         labelRectF = new RectF();
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         circleRectF = new RectF();
+    }
+
+    public float getPercent() {
+        return percent;
     }
 
     public void setAnimateDuration(long animateDuration) {
@@ -75,11 +91,19 @@ public class CirclePercentChart extends View implements IAnimatorChart {
         invalidate();
     }
 
-    public void animateShow() {
+    /**
+     *
+     * @param sync 是否和其他动画保持执行角度一致
+     */
+    public void animateShow(boolean sync) {
         if (percent > 0) {
             ObjectAnimator animator = ObjectAnimator.ofFloat(this,
-                            animateProperty(), animateStart(), animateEnd())
-                    .setDuration(animateDuration);
+                            animateProperty(), animateStart(), animateEnd());
+            if (sync) {
+                animator.setDuration((long) (animateDuration * percent));
+            } else {
+                animator.setDuration(animateDuration);
+            }
             animator.setInterpolator(new LinearOutSlowInInterpolator());
             animator.start();
         }
@@ -99,14 +123,6 @@ public class CirclePercentChart extends View implements IAnimatorChart {
     @Override
     public float animateEnd() {
         return STOP_ANGLE;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            animateShow();
-        }
-        return super.onTouchEvent(event);
     }
 
     private static final String TAG = "ProgressChart";

@@ -1,12 +1,14 @@
-package com.tsh.chart;
+package com.tsh.chart.ratio;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,6 +16,9 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+
+import com.tsh.chart.IAnimatorChart;
+import com.tsh.chart.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +64,7 @@ public class PieChart extends View implements IAnimatorChart {
      * 默认膨胀因子
      */
     private static final float DEFAULT_EXPANSION_FACTOR = 1.7f;
+    private static final int DEFAULT_ANIMATE_DURATION = 15000;
 
     final List<Entry> entries;
     final Paint chartPaint;
@@ -105,12 +111,23 @@ public class PieChart extends View implements IAnimatorChart {
 
     public PieChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initAttrs(context, attrs, defStyleAttr);
         chartPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         chartPaint.setStyle(Paint.Style.STROKE);
         chartPaint.setStrokeCap(Paint.Cap.ROUND);
         circleRectF = new RectF();
         entries = new ArrayList<>();
-        strokeWidth = 20;
+    }
+
+    private void initAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
+        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PieChart)) {
+            emptyColor = typedArray.getColor(R.styleable.PieChart_pieEmptyColor, Color.LTGRAY);
+            strokeWidth = typedArray.getDimension(R.styleable.PieChart_pieWidth,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
+            expansionFactor = typedArray.getFloat(R.styleable.PieChart_pieFactor, DEFAULT_EXPANSION_FACTOR);
+            divideAngle = typedArray.getFloat(R.styleable.PieChart_pieDivideAngle, DEFAULT_DIVIDE_ANGLE);
+            animateDuration = typedArray.getInt(R.styleable.PieChart_pieAnimateDuration, DEFAULT_ANIMATE_DURATION);
+        }
     }
 
     /**
@@ -121,7 +138,6 @@ public class PieChart extends View implements IAnimatorChart {
      */
     public void setExpansionFactor(float expansionFactor) {
         this.expansionFactor = expansionFactor;
-        postInvalidate();
     }
 
     /**
@@ -130,7 +146,6 @@ public class PieChart extends View implements IAnimatorChart {
      */
     public void setDivideAngle(float divideAngle) {
         this.divideAngle = divideAngle;
-        postInvalidate();
     }
 
     /**
@@ -147,7 +162,6 @@ public class PieChart extends View implements IAnimatorChart {
      */
     public void setStrokeWidth(float strokeWidth) {
         this.strokeWidth = strokeWidth;
-        postInvalidate();
     }
 
     /**
@@ -156,7 +170,6 @@ public class PieChart extends View implements IAnimatorChart {
      */
     public void setEmptyColor(int emptyColor) {
         this.emptyColor = emptyColor;
-        postInvalidate();
     }
 
     /**
@@ -165,7 +178,7 @@ public class PieChart extends View implements IAnimatorChart {
      */
     public void addEntry(Entry entry) {
         entries.add(entry);
-        postInvalidate();
+        invalidate();
     }
 
     /**
@@ -174,7 +187,7 @@ public class PieChart extends View implements IAnimatorChart {
      */
     public void removeEntry(Entry entry) {
         if (entries.remove(entry)) {
-            postInvalidate();
+            invalidate();
         }
     }
 
@@ -193,19 +206,6 @@ public class PieChart extends View implements IAnimatorChart {
         invalidate();
     }
 
-    /**
-     * 动画显示
-     */
-    public void animateShow() {
-        if (!entries.isEmpty()) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(this,
-                            animateProperty(), animateStart(), animateEnd())
-                            .setDuration(animateDuration);
-            animator.setInterpolator(new LinearOutSlowInInterpolator());
-            animator.start();
-        }
-    }
-
     @Override
     public String animateProperty() {
         return "animateAngle";
@@ -221,20 +221,25 @@ public class PieChart extends View implements IAnimatorChart {
         return 360;
     }
 
+    /**
+     * 动画显示
+     */
+    public void animateShow() {
+        if (!entries.isEmpty()) {
+            ObjectAnimator animator = ObjectAnimator.ofFloat(this,
+                            animateProperty(), animateStart(), animateEnd())
+                            .setDuration(animateDuration);
+            animator.setInterpolator(new LinearOutSlowInInterpolator());
+            animator.start();
+        }
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         int size = Math.min(width, height);
         setMeasuredDimension(size, size);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            animateShow();
-        }
-        return super.onTouchEvent(event);
     }
 
     @Override
