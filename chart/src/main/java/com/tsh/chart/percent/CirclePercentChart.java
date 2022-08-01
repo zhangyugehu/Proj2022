@@ -1,5 +1,6 @@
 package com.tsh.chart.percent;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -97,32 +98,17 @@ public class CirclePercentChart extends View implements IAnimatorChart {
      */
     public void animateShow(boolean sync) {
         if (percent > 0) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(this,
-                            animateProperty(), animateStart(), animateEnd());
-            if (sync) {
-                animator.setDuration((long) (animateDuration * percent));
-            } else {
-                animator.setDuration(animateDuration);
-            }
-            animator.setInterpolator(new LinearOutSlowInInterpolator());
-            animator.start();
+            getAnimator().start();
         }
     }
 
-
     @Override
-    public String animateProperty() {
-        return "animateProgress";
-    }
-
-    @Override
-    public float animateStart() {
-        return 0;
-    }
-
-    @Override
-    public float animateEnd() {
-        return STOP_ANGLE;
+    public Animator getAnimator() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(this,
+                "animateProgress", 0, STOP_ANGLE);
+        animator.setDuration((long) (animateDuration * percent));
+        animator.setInterpolator(new LinearOutSlowInInterpolator());
+        return animator;
     }
 
     private static final String TAG = "ProgressChart";

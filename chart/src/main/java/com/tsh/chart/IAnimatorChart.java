@@ -1,7 +1,10 @@
 package com.tsh.chart;
 
+import android.animation.Animator;
+
 public interface IAnimatorChart {
-    String animateProperty();
-    float animateStart();
-    float animateEnd();
+    /**
+     * @return
+     */
+    Animator getAnimator();
 }

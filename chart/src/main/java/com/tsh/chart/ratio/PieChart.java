@@ -1,5 +1,6 @@
 package com.tsh.chart.ratio;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
@@ -207,30 +207,20 @@ public class PieChart extends View implements IAnimatorChart {
     }
 
     @Override
-    public String animateProperty() {
-        return "animateAngle";
-    }
-
-    @Override
-    public float animateStart() {
-        return 0;
-    }
-
-    @Override
-    public float animateEnd() {
-        return 360;
+    public Animator getAnimator() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(this,
+                        "animateAngle", 0, 360)
+                .setDuration(animateDuration);
+        animator.setInterpolator(new LinearOutSlowInInterpolator());
+        return animator;
     }
 
     /**
      * 动画显示
      */
-    public void animateShow() {
+    public void showAnimator() {
         if (!entries.isEmpty()) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(this,
-                            animateProperty(), animateStart(), animateEnd())
-                            .setDuration(animateDuration);
-            animator.setInterpolator(new LinearOutSlowInInterpolator());
-            animator.start();
+            getAnimator().start();
         }
     }
 

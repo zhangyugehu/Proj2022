@@ -1,5 +1,6 @@
 package com.tsh.chart.ratio;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -96,33 +97,21 @@ public class LinePieChart extends View implements IAnimatorChart {
         invalidate();
     }
 
-    public void animateShow() {
+    public void showAnimator() {
         if (entries.isEmpty()) {
             // do nothing
-        } if (isShown()) {
-            ObjectAnimator animator =
-                    ObjectAnimator.ofFloat(this, animateProperty(), animateStart(), animateEnd())
-                    .setDuration(animateDuration);
-            animator.setInterpolator(new LinearOutSlowInInterpolator());
-            animator.start();
         } else {
-            post(this::animateShow);
+            getAnimator().start();
         }
     }
 
     @Override
-    public String animateProperty() {
-        return "animatePercent";
-    }
-
-    @Override
-    public float animateStart() {
-        return 0;
-    }
-
-    @Override
-    public float animateEnd() {
-        return 1;
+    public Animator getAnimator() {
+        ObjectAnimator animator =
+            ObjectAnimator.ofFloat(this, "animatePercent", 0, 1)
+                    .setDuration(animateDuration);
+        animator.setInterpolator(new LinearOutSlowInInterpolator());
+        return animator;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.tsh.chart.percent;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -130,34 +131,25 @@ public class LinePercentChart extends View implements IAnimatorChart {
      *
      * @param sync 是否和其他动画保持执行角度一致
      */
-    public void animateShow(boolean sync) {
+    public void showAnimator(boolean sync) {
         if (percent > 0) {
-            ObjectAnimator animator =
-                    ObjectAnimator.ofFloat(this,
-                            animateProperty(), animateStart(), animateEnd());
+            Animator animator = getAnimator();
             if (sync) {
                 animator.setDuration((long) (animateDuration * percent));
             } else {
                 animator.setDuration(animateDuration);
             }
-            animator.setInterpolator(new LinearOutSlowInInterpolator());
             animator.start();
         }
     }
 
     @Override
-    public String animateProperty() {
-        return "animatePercent";
-    }
-
-    @Override
-    public float animateStart() {
-        return 0;
-    }
-
-    @Override
-    public float animateEnd() {
-        return ANIMATE_END;
+    public Animator getAnimator() {
+        ObjectAnimator animator =
+                ObjectAnimator.ofFloat(this, "animatePercent", 0, ANIMATE_END);
+        animator.setDuration((long) (animateDuration * percent));
+        animator.setInterpolator(new LinearOutSlowInInterpolator());
+        return  animator;
     }
 
     @Override

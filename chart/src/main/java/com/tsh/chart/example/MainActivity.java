@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 
@@ -89,41 +89,40 @@ public class MainActivity extends AppCompatActivity {
             View childAt = circlePercentLayout.getChildAt(i);
             if (childAt instanceof CirclePercentChart) {
                 CirclePercentChart chart = (CirclePercentChart) childAt;
-                animators.add(
-                        createAnimator(chart).setDuration((long) (animateDuration * chart.getPercent()))
-                );
+                animators.add(chart.getAnimator());
             }
         }
         animatorSet.playTogether(animators);
         circlePercentLayout.setOnClickListener(v -> animatorSet.start());
     }
 
+    void findAnimatorChart(ViewGroup viewGroup, List<Animator> animators) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View childAt = viewGroup.getChildAt(i);
+            if (childAt instanceof IAnimatorChart) {
+                IAnimatorChart chart = (IAnimatorChart) childAt;
+                animators.add(chart.getAnimator());
+            } else if (childAt instanceof ViewGroup) {
+                findAnimatorChart((ViewGroup) childAt, animators);
+            }
+        }
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            linePercentChart0.post(() -> {
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playTogether(
-                        createAnimator(percentChart),
-                        createAnimator(pieChart),
-                        createAnimator(linePieChart),
-                        createAnimator(linePercentChart0).setDuration((long) (animateDuration * linePercentChart0.getPercent())),
-                        createAnimator(linePercentChart1).setDuration((long) (animateDuration * linePercentChart1.getPercent())),
-                        createAnimator(linePercentChart2).setDuration((long) (animateDuration * linePercentChart2.getPercent())),
-                        createAnimator(linePercentChart3).setDuration((long) (animateDuration * linePercentChart3.getPercent()))
-                );
-//                animatorSet.setDuration(animateDuration);
-                animatorSet.setInterpolator(new LinearInterpolator());
-                animatorSet.start();
-            });
+            ViewGroup rootLayout = findViewById(R.id.layout_root);
+            AnimatorSet animatorSet = new AnimatorSet();
+            List<Animator> animators = new ArrayList<>();
+            findAnimatorChart(rootLayout, animators);
+            animatorSet.setInterpolator(new LinearInterpolator());
+            animatorSet.playTogether(animators);
+            animatorSet.start();
         }
         return super.dispatchTouchEvent(ev);
     }
 
-    ObjectAnimator createAnimator(IAnimatorChart animatorChart) {
-        return ObjectAnimator.ofFloat(animatorChart,
-                animatorChart.animateProperty(),
-                animatorChart.animateStart(),
-                animatorChart.animateEnd());
+    Animator createAnimator(IAnimatorChart animatorChart) {
+        return animatorChart.getAnimator();
     }
 }
