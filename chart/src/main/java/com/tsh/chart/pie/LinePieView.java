@@ -1,4 +1,4 @@
-package com.tsh.chart.ratio;
+package com.tsh.chart.pie;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinePieView extends View implements IAnimatorChart {
-
     final Paint paint;
     final List<PercentChartEntry> entries;
     int emptyColor;
@@ -44,8 +43,9 @@ public class LinePieView extends View implements IAnimatorChart {
         try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinePieView)) {
             strokeWidth = typedArray.getDimension(R.styleable.LinePieView_linePieWidth,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
-            animateDuration = typedArray.getInt(R.styleable.LinePieView_linePieAnimation, 1500);
-            emptyColor = typedArray.getColor(R.styleable.LinePieView_linePieEmptyColor, Color.DKGRAY);
+            animateDuration = typedArray.getInt(R.styleable.LinePieView_linePieAnimation, DEFAULT_ANIMATION);
+            emptyColor = typedArray.getColor(R.styleable.LinePieView_linePieEmptyColor,
+                    Color.parseColor("#111C24"));
         }
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeCap(Paint.Cap.ROUND);

@@ -1,4 +1,4 @@
-package com.tsh.chart.ratio;
+package com.tsh.chart.pie;
 
 import android.content.Context;
 import android.graphics.Color;

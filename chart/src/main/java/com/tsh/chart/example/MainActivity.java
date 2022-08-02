@@ -18,10 +18,10 @@ import com.tsh.chart.data.PercentChartEntry;
 import com.tsh.chart.percent.CirclePercentView;
 import com.tsh.chart.IAnimatorChart;
 import com.tsh.chart.percent.LabelCirclePercentView;
-import com.tsh.chart.ratio.LabelPieView;
+import com.tsh.chart.pie.LabelPieView;
 import com.tsh.chart.percent.LinePercentView;
-import com.tsh.chart.ratio.LinePieView;
-import com.tsh.chart.ratio.PieView;
+import com.tsh.chart.pie.LinePieView;
+import com.tsh.chart.pie.PieView;
 import com.tsh.chart.R;
 
 import java.util.ArrayList;

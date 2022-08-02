@@ -55,7 +55,7 @@ public class CirclePercentView extends View implements IAnimatorChart {
             percent = typedArray.getFloat(R.styleable.CirclePercentView_circlePercentValue, 0);
             strokeWidth = typedArray.getDimension(R.styleable.CirclePercentView_circlePercentWidth,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics()));
-            animateDuration = typedArray.getInt(R.styleable.CirclePercentView_circlePercentAnimateDuration, 1500);
+            animateDuration = typedArray.getInt(R.styleable.CirclePercentView_circlePercentAnimateDuration, DEFAULT_ANIMATION);
             color = typedArray.getColor(R.styleable.CirclePercentView_circlePercentColor,
                     Color.parseColor("#111C24"));
             activeColor = typedArray.getColor(R.styleable.CirclePercentView_circlePercentActiveColor,

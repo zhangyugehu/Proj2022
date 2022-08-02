@@ -18,7 +18,7 @@ import com.tsh.chart.PointTextView;
 import com.tsh.chart.data.ChartData;
 import com.tsh.chart.data.PercentChartEntry;
 import com.tsh.chart.legend.LegendInflater;
-import com.tsh.chart.ratio.LinePieView;
+import com.tsh.chart.pie.LinePieView;
 
 import java.util.List;
 import java.util.Locale;

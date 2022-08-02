@@ -67,7 +67,7 @@ public class LinePercentView extends View implements IAnimatorChart {
         try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinePercentView)) {
             strokeWidth = typedArray.getDimension(R.styleable.LinePercentView_linePercentWidth,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
-            animateDuration = typedArray.getInt(R.styleable.LinePercentView_linePercentAnimation, 1500);
+            animateDuration = typedArray.getInt(R.styleable.LinePercentView_linePercentAnimation, DEFAULT_ANIMATION);
             color = typedArray.getColor(R.styleable.LinePercentView_linePercentColor, Color.DKGRAY);
             textColor = typedArray.getColor(R.styleable.LinePercentView_linePercentTextColor, Color.WHITE);
             textSize = typedArray.getDimension(R.styleable.LinePercentView_linePercentTextSize,

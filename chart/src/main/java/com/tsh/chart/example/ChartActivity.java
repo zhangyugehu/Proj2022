@@ -3,31 +3,23 @@ package com.tsh.chart.example;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.tsh.chart.PointTextView;
 import com.tsh.chart.R;
 import com.tsh.chart.data.ChartData;
-import com.tsh.chart.data.ChartEntry;
 import com.tsh.chart.data.PercentChartEntry;
 import com.tsh.chart.percent.CirclePercentChart;
 import com.tsh.chart.percent.LinePercentGroupChart;
 import com.tsh.chart.percent.LinePieChart;
-import com.tsh.chart.ratio.PieChart;
-import com.tsh.chart.ratio.PieView;
+import com.tsh.chart.pie.PieChart;
+import com.tsh.chart.pie.PieView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 public class ChartActivity extends AppCompatActivity {
     PieChart pieChart, pieChart2;

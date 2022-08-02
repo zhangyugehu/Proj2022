@@ -73,13 +73,13 @@
             app:circlePercentValue="0.2" />
     </LinearLayout>
 
-    <com.tsh.chart.ratio.PieChart
+    <com.tsh.chart.pie.PieChart
         android:id="@+id/pie_chart"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.tsh.chart.ratio.PieChart
+    <com.tsh.chart.pie.PieChart
         android:id="@+id/pie_chart_2"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"

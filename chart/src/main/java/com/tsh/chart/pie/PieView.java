@@ -1,4 +1,4 @@
-package com.tsh.chart.ratio;
+package com.tsh.chart.pie;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -64,8 +64,7 @@ public class PieView extends View implements IAnimatorChart {
     /**
      * 默认膨胀因子
      */
-    private static final float DEFAULT_EXPANSION_FACTOR = 1.7f;
-    private static final int DEFAULT_ANIMATE_DURATION = 1500;
+    private static final float DEFAULT_EXPANSION_FACTOR = 2f;
 
     final List<Entry> entries;
     final Paint chartPaint;
@@ -129,7 +128,7 @@ public class PieView extends View implements IAnimatorChart {
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics()));
             expansionFactor = typedArray.getFloat(R.styleable.PieView_pieFactor, DEFAULT_EXPANSION_FACTOR);
             divideAngle = typedArray.getFloat(R.styleable.PieView_pieDivideAngle, DEFAULT_DIVIDE_ANGLE);
-            animateDuration = typedArray.getInt(R.styleable.PieView_pieAnimateDuration, DEFAULT_ANIMATE_DURATION);
+            animateDuration = typedArray.getInt(R.styleable.PieView_pieAnimateDuration, DEFAULT_ANIMATION);
         }
     }
 
