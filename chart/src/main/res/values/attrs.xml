@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="PieChart">
+    <declare-styleable name="PieView">
         <attr name="pieEmptyColor" format="color" />
         <attr name="pieWidth" format="dimension" />
         <attr name="pieFactor" format="float" />
         <attr name="pieDivideAngle" format="float" />
         <attr name="pieAnimateDuration" format="integer" />
     </declare-styleable>
-    <declare-styleable name="LabelPieChart">
+    <declare-styleable name="LabelPieView">
         <attr name="pieTextSize" format="dimension" />
         <attr name="pieTypeface" format="reference" />
     </declare-styleable>
-    <declare-styleable name="CirclePercentChart">
-        <attr name="circlePercentPercent" format="float" />
+
+    <declare-styleable name="CirclePercentView">
+        <attr name="circlePercentValue" format="float" />
         <attr name="circlePercentWidth" format="dimension" />
         <attr name="circlePercentAnimateDuration" format="integer" />
         <attr name="circlePercentColor" format="color" />
         <attr name="circlePercentActiveColor" format="color" />
     </declare-styleable>
-    <declare-styleable name="LabelCirclePercentChart">
+    <declare-styleable name="CirclePercentChart">
+        <attr name="circlePercentBackgroundColor" format="color" />
+        <attr name="circlePercentRadius" format="dimension" />
+        <attr name="circlePercentSize" format="dimension" />
+        <attr name="circlePercentTitle" format="string" />
+        <attr name="circlePercentTitleHide" format="string" />
+        <attr name="circlePercentTitleColor" format="color" />
+        <attr name="circlePercentTitleHideColor" format="color" />
+        <attr name="circlePercentTitleSize" format="dimension" />
+        <attr name="circlePercentSubTitle" format="string" />
+        <attr name="circlePercentSubTitleHide" format="string" />
+        <attr name="circlePercentSubTitleColor" format="color" />
+        <attr name="circlePercentSubTitleHideColor" format="color" />
+        <attr name="circlePercentSubTitleSize" format="dimension" />
+        <attr name="circlePercentPaddingVertical" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="LabelCirclePercentView">
         <attr name="circlePercentTextSize" format="dimension" />
         <attr name="circlePercentTextColor" format="color" />
         <attr name="circlePercentText" format="string|reference" />
         <attr name="circlePercentTypeface" format="reference" />
     </declare-styleable>
-    <declare-styleable name="LinePieChart">
+    <declare-styleable name="LinePieView">
         <attr name="linePieWidth" format="dimension" />
         <attr name="linePieEmptyColor" format="color" />
         <attr name="linePieAnimation" format="integer" />
     </declare-styleable>
-    <declare-styleable name="LinePercentChart">
+    <declare-styleable name="LinePercentView">
         <attr name="linePercentWidth" format="dimension" />
         <attr name="linePercentColor" format="color" />
         <attr name="linePercentAnimation" format="integer" />

@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 
 import androidx.annotation.Nullable;
@@ -54,13 +55,19 @@ public class PointTextView extends AppCompatTextView {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension((int) (getMeasuredWidth() + size * 2 + pointPadding), getMeasuredHeight());
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
         canvas.translate(size * 2 + pointPadding, 0);
         super.onDraw(canvas);
         canvas.restore();
         paint.setColor(color);
-        canvas.drawCircle(size, getHeight() >> 1, size, paint);
+        canvas.drawCircle(getPaddingStart() + size, getHeight() >> 1, size, paint);
     }
 
     private static final String TAG = "PointTextView";

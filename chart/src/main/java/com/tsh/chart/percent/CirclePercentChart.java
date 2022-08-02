@@ -1,149 +1,178 @@
 package com.tsh.chart.percent;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
-import android.view.View;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import com.tsh.chart.IAnimatorChart;
 import com.tsh.chart.R;
 
-public class CirclePercentChart extends View implements IAnimatorChart {
-    private static final long DEFAULT_ANIMATE_DURATION = 1500;
+public class CirclePercentChart extends LinearLayout implements IAnimatorChart {
 
-    private static final int START_ANGLE = 135;
-    private static final int STOP_ANGLE = 270;
+    final LabelCirclePercentView vPercentView;
 
-    Paint paint;
-    RectF circleRectF;
-    RectF labelRectF;
+    final TextView vTitle, vSubTitle;
 
-    float strokeWidth;
+    int radiusBackgroundColor;
+    int circleViewSize;
+    int paddingVertical;
+    float radius;
+    float titleTextSize;
+    float subTitleTextSize;
+    int titleTextColor;
+    int subTitleTextColor;
+    int titleTextHideColor;
+    int subTitleTextHideColor;
+    CharSequence title, subTitle;
+    CharSequence titleHide = "0.00", subTitleHide = "0.00%";
 
-    int color;
-    int activeColor;
-
-    float percent;
-
-    float animateProgress = STOP_ANGLE;
-
-    long animateDuration;
-
-    public CirclePercentChart(Context context) {
+    public CirclePercentChart(@NonNull Context context) {
         this(context, null);
     }
 
-    public CirclePercentChart(Context context, @Nullable AttributeSet attrs) {
+    public CirclePercentChart(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CirclePercentChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CirclePercentChart(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setOrientation(LinearLayout.VERTICAL);
+        setGravity(Gravity.CENTER);
         try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CirclePercentChart)) {
-            percent = typedArray.getFloat(R.styleable.CirclePercentChart_circlePercentPercent, 0);
-            strokeWidth = typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentWidth,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
-            animateDuration = typedArray.getInt(R.styleable.CirclePercentChart_circlePercentAnimateDuration, 1500);
-            color = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentColor, Color.LTGRAY);
-            activeColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentActiveColor, Color.WHITE);
+            circleViewSize = (int) typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentSize,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55f, getResources().getDisplayMetrics()));
+            paddingVertical = (int) typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentPaddingVertical,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 13f, getResources().getDisplayMetrics()));
+            titleTextSize = (int) typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentTitleSize, 12f);
+            subTitleTextSize = (int) typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentSubTitleSize,
+                    titleTextSize);
+            titleTextColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentTitleColor,
+                    Color.parseColor("#ff5353"));
+            subTitleTextColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentSubTitleColor,
+                    titleTextColor);
+            titleTextHideColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentTitleHideColor,
+                    Color.parseColor("#A0A9BB"));
+            subTitleTextHideColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentSubTitleHideColor,
+                    titleTextHideColor);
+            radiusBackgroundColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentBackgroundColor,
+                    Color.parseColor("#18222B"));
+            radius = (int) typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentRadius,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, getResources().getDisplayMetrics()));
+            title = typedArray.getString(R.styleable.CirclePercentChart_circlePercentTitle);
+            if (typedArray.hasValue(R.styleable.CirclePercentChart_circlePercentTitleHide)) {
+                titleHide = typedArray.getString(R.styleable.CirclePercentChart_circlePercentTitleHide);
+            }
+            subTitle = typedArray.getString(R.styleable.CirclePercentChart_circlePercentSubTitle);
+            if (typedArray.hasValue(R.styleable.CirclePercentChart_circlePercentSubTitleHide)) {
+                subTitleHide = typedArray.getString(R.styleable.CirclePercentChart_circlePercentSubTitleHide);
+            }
         }
-        labelRectF = new RectF();
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        circleRectF = new RectF();
+
+        LayoutParams circleLayoutParams = new LayoutParams(circleViewSize, circleViewSize);
+        addView(vPercentView = new LabelCirclePercentView(context, attrs, defStyleAttr), circleLayoutParams);
+        addView((vTitle = new TextView(context)),
+                new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        vTitle.setTextColor(titleTextColor);
+        vTitle.setTextSize(titleTextSize);
+        vTitle.setText(title);
+        addView((vSubTitle = new TextView(context)),
+                new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        vSubTitle.setTextColor(subTitleTextColor);
+        vSubTitle.setTextSize(subTitleTextSize);
+        vSubTitle.setText(subTitle);
+
+        setPadding(0, paddingVertical, 0, paddingVertical);
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setColor(radiusBackgroundColor);
+        gradientDrawable.setCornerRadius(radius);
+        setBackground(gradientDrawable);
     }
 
-    public float getPercent() {
-        return percent;
+    private static final String TAG = "CirclePercentChart";
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getAnimator().start();
     }
 
-    public void setAnimateDuration(long animateDuration) {
-        this.animateDuration = animateDuration;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
-
-    public void setActiveColor(int activeColor) {
-        this.activeColor = activeColor;
-    }
-
-    public void setPercent(float percent) {
-        this.percent = percent;
-    }
-
-    public void setStrokeWidth(float strokeWidth) {
-        this.strokeWidth = strokeWidth;
-        calcCircleRect();
-    }
-
-    public void setAnimateProgress(float animateProgress) {
-        this.animateProgress = animateProgress;
-        invalidate();
-    }
-
-    /**
-     *
-     * @param sync 是否和其他动画保持执行角度一致
-     */
-    public void animateShow(boolean sync) {
-        if (percent > 0) {
-            getAnimator().start();
+    public void hideDetail(boolean hide) {
+        vPercentView.setHideDetail(hide);
+        vPercentView.invalidate();
+        if (hide) {
+            vTitle.setTextColor(titleTextHideColor);
+            vTitle.setText(titleHide);
+            vSubTitle.setTextColor(subTitleTextHideColor);
+            vSubTitle.setText(subTitleHide);
+        } else {
+            vPercentView.showAnimator();
+            vTitle.setTextColor(titleTextColor);
+            vTitle.setText(title);
+            vSubTitle.setTextColor(subTitleTextColor);
+            vSubTitle.setText(subTitle);
         }
+    }
+
+    public void setValueColor(int color) {
+        vSubTitle.setTextColor(color);
+        vTitle.setTextColor(color);
+    }
+
+    public void setValueTextSize(float textSize) {
+        vSubTitle.setTextSize(textSize);
+    }
+
+    public void setPercentTextSize(float textSize) {
+        vSubTitle.setTextSize(textSize);
+    }
+
+    public void setTitle(CharSequence value) {
+        this.title = value;
+        vTitle.setText(value);
+    }
+
+    public void setTitleHide(CharSequence titleHide) {
+        this.titleHide = titleHide;
+    }
+
+    public void setTitleColor(int color) {
+        vTitle.setTextColor(color);
+    }
+
+    public void setSubTitle(CharSequence subTitle) {
+        this.subTitle = subTitle;
+        vSubTitle.setText(subTitle);
+    }
+
+    public void setSubTitleHide(CharSequence subTitleHide) {
+        this.subTitleHide = subTitleHide;
+    }
+
+    public TextView getAmountLabel() {
+        return vTitle;
+    }
+
+    public TextView getPercentLabel() {
+        return vSubTitle;
+    }
+
+    public LabelCirclePercentView getPercentView() {
+        return vPercentView;
     }
 
     @Override
     public Animator getAnimator() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(this,
-                "animateProgress", 0, STOP_ANGLE);
-        animator.setDuration((long) (animateDuration * percent));
-        animator.setInterpolator(new LinearOutSlowInInterpolator());
-        return animator;
-    }
-
-    private static final String TAG = "ProgressChart";
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-        int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
-        int size = Math.min(width, height);
-        setMeasuredDimension(size, size);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        calcCircleRect();
-    }
-
-    protected void calcCircleRect() {
-        float halfStrokeWidth = strokeWidth / 2;
-        circleRectF.set(getPaddingLeft() + halfStrokeWidth,
-                getPaddingTop() + halfStrokeWidth,
-                getWidth() - getPaddingRight() - halfStrokeWidth,
-                getHeight() - getPaddingBottom() - halfStrokeWidth);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        paint.setColor(color);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setStrokeWidth(strokeWidth);
-        canvas.drawArc(circleRectF, START_ANGLE, STOP_ANGLE, false, paint);
-        paint.setColor(activeColor);
-        canvas.drawArc(circleRectF, START_ANGLE, animateProgress * percent, false, paint);
+        return vPercentView.getAnimator();
     }
 }

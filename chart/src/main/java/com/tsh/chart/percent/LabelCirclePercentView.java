@@ -18,7 +18,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.tsh.chart.R;
 
-public class LabelCirclePercentChart extends CirclePercentChart {
+public class LabelCirclePercentView extends CirclePercentView {
     private static final boolean DEBUG_SHOW_LIMIT = false;
 
     final TextPaint textPaint;
@@ -27,23 +27,23 @@ public class LabelCirclePercentChart extends CirclePercentChart {
     int textColor;
     float textSize;
 
-    public LabelCirclePercentChart(Context context) {
+    public LabelCirclePercentView(Context context) {
         this(context, null);
     }
 
-    public LabelCirclePercentChart(Context context, @Nullable AttributeSet attrs) {
+    public LabelCirclePercentView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LabelCirclePercentChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public LabelCirclePercentView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelCirclePercentChart)) {
-            textSize = typedArray.getDimension(R.styleable.LabelCirclePercentChart_circlePercentTextSize,
+        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelCirclePercentView)) {
+            textSize = typedArray.getDimension(R.styleable.LabelCirclePercentView_circlePercentTextSize,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-            text = typedArray.getString(R.styleable.LabelCirclePercentChart_circlePercentText);
-            textColor = typedArray.getColor(R.styleable.LabelCirclePercentChart_circlePercentTextColor, Color.LTGRAY);
-            if (typedArray.hasValue(R.styleable.LabelCirclePercentChart_circlePercentTypeface)) {
-                int fontId = typedArray.getResourceId(R.styleable.LabelCirclePercentChart_circlePercentTypeface, -1);
+            text = typedArray.getString(R.styleable.LabelCirclePercentView_circlePercentText);
+            textColor = typedArray.getColor(R.styleable.LabelCirclePercentView_circlePercentTextColor, Color.LTGRAY);
+            if (typedArray.hasValue(R.styleable.LabelCirclePercentView_circlePercentTypeface)) {
+                int fontId = typedArray.getResourceId(R.styleable.LabelCirclePercentView_circlePercentTypeface, -1);
                 setTypeface(ResourcesCompat.getFont(context, fontId));
             }
         }

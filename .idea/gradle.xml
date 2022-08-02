@@ -33,6 +33,7 @@
             <option value="$PROJECT_DIR$/simpleutil" />
             <option value="$PROJECT_DIR$/thefour" />
             <option value="$PROJECT_DIR$/touchevent" />
+            <option value="$PROJECT_DIR$/view" />
             <option value="$PROJECT_DIR$/workmanager" />
           </set>
         </option>

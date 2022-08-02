@@ -9,6 +9,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Proj2022">
         <activity
+            android:name=".example.ChartActivity"
+            android:exported="false" />
+        <activity
             android:name=".example.MainActivity"
             android:exported="true">
             <intent-filter>

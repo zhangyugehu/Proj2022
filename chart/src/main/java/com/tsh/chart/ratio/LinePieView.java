@@ -16,67 +16,64 @@ import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import com.tsh.chart.IAnimatorChart;
 import com.tsh.chart.R;
+import com.tsh.chart.data.PercentChartEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinePieChart extends View implements IAnimatorChart {
-
-    public static class Entry {
-        float percent;
-        int color;
-
-        public Entry() {
-        }
-
-        public Entry(float percent, int color) {
-            this.percent = percent;
-            this.color = color;
-        }
-    }
+public class LinePieView extends View implements IAnimatorChart {
 
     final Paint paint;
-    final List<Entry> entries;
+    final List<PercentChartEntry> entries;
     int emptyColor;
     float strokeWidth;
     float animatePercent = 1;
     long animateDuration;
+    boolean isHideDetail;
 
-    public LinePieChart(Context context) {
+    public LinePieView(Context context) {
         this(context, null);
     }
 
-    public LinePieChart(Context context, @Nullable AttributeSet attrs) {
+    public LinePieView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LinePieChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public LinePieView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinePieChart)) {
-            strokeWidth = typedArray.getDimension(R.styleable.LinePieChart_linePieWidth,
+        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinePieView)) {
+            strokeWidth = typedArray.getDimension(R.styleable.LinePieView_linePieWidth,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
-            animateDuration = typedArray.getInt(R.styleable.LinePieChart_linePieAnimation, 1500);
-            emptyColor = typedArray.getColor(R.styleable.LinePieChart_linePieEmptyColor, Color.DKGRAY);
+            animateDuration = typedArray.getInt(R.styleable.LinePieView_linePieAnimation, 1500);
+            emptyColor = typedArray.getColor(R.styleable.LinePieView_linePieEmptyColor, Color.DKGRAY);
         }
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeCap(Paint.Cap.ROUND);
         entries = new ArrayList<>();
     }
 
-    public void addEntry(Entry entry) {
+    public boolean isHideDetail() {
+        return isHideDetail;
+    }
+
+    public void setHideDetail(boolean hideDetail) {
+        isHideDetail = hideDetail;
+    }
+
+    public void addEntry(PercentChartEntry entry) {
         entries.add(entry);
     }
 
-    public boolean removeEntry(Entry entry) {
+    public boolean removeEntry(PercentChartEntry entry) {
         return entries.remove(entry);
     }
 
-    public void setData(List<Entry> data) {
+    public void setData(List<PercentChartEntry> data) {
         entries.clear();
         entries.addAll(data);
     }
 
-    public List<Entry> getData() {
+    public List<PercentChartEntry> getData() {
         return entries;
     }
 
@@ -141,17 +138,17 @@ public class LinePieChart extends View implements IAnimatorChart {
                 - /*中间笔帽+间隔*/(divideWidth * (entries.size() - 1))
                 - /*最右边笔帽*/capWidth;
         float nextStart = capWidth + getPaddingStart();
-        float endX = getRight() - getPaddingEnd() - (strokeWidth / 2);
+        float endX = getWidth() - getPaddingEnd() - getPaddingStart() - strokeWidth;
         paint.setStrokeWidth(strokeWidth);
-        if (entries.isEmpty()) {
+        if (entries.isEmpty() || isHideDetail) {
             paint.setColor(emptyColor);
             canvas.drawLine(nextStart, centerY, endX, centerY, paint);
-        } for (int i = 0; i < entries.size(); i++) {
-            Entry entry = entries.get(i);
+        } else for (int i = 0; i < entries.size(); i++) {
+            PercentChartEntry entry = entries.get(i);
             float animateX = endX * animatePercent;
             if (animateX > nextStart) {
-                float entryWidth = (availableWidth * realPercent(entry.percent));
-                paint.setColor(entry.color);
+                float entryWidth = (availableWidth * realPercent(entry.getPercent()));
+                paint.setColor(entry.getColor());
                 float stopX = nextStart + entryWidth;
                 canvas.drawLine(nextStart, centerY, Math.min(stopX, animateX), centerY, paint);
                 nextStart = stopX + divideWidth;
@@ -161,8 +158,8 @@ public class LinePieChart extends View implements IAnimatorChart {
 
     private float realPercent(float percent) {
         float totalPercent = 0;
-        for (Entry entry : entries) {
-            totalPercent += entry.percent;
+        for (PercentChartEntry entry : entries) {
+            totalPercent += entry.getPercent();
         }
         return percent / totalPercent;
     }

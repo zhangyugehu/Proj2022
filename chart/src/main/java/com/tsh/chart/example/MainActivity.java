@@ -4,21 +4,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 
-import com.tsh.chart.percent.CirclePercentChart;
+import com.tsh.chart.data.PercentChartEntry;
+import com.tsh.chart.percent.CirclePercentView;
 import com.tsh.chart.IAnimatorChart;
-import com.tsh.chart.percent.LabelCirclePercentChart;
-import com.tsh.chart.ratio.LabelPieChart;
-import com.tsh.chart.percent.LinePercentChart;
-import com.tsh.chart.ratio.LinePieChart;
-import com.tsh.chart.ratio.PieChart;
+import com.tsh.chart.percent.LabelCirclePercentView;
+import com.tsh.chart.ratio.LabelPieView;
+import com.tsh.chart.percent.LinePercentView;
+import com.tsh.chart.ratio.LinePieView;
+import com.tsh.chart.ratio.PieView;
 import com.tsh.chart.R;
 
 import java.util.ArrayList;
@@ -27,10 +30,10 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LabelPieChart pieChart;
-    private LabelCirclePercentChart percentChart;
-    private LinePieChart linePieChart;
-    private LinePercentChart linePercentChart0, linePercentChart1, linePercentChart2, linePercentChart3;
+    private LabelPieView pieChart;
+    private LabelCirclePercentView percentChart;
+    private LinePieView linePieView;
+    private LinePercentView linePercentView0, linePercentView1, linePercentView2, linePercentView3;
 
     long animateDuration = 1500;
 
@@ -45,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
 //        pieChart.setExpansionFactor(2);
 //        pieChart.setEmptyColor(Color.parseColor("#111C24"));
 //        pieChart.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
-        pieChart.setLabelFormatter((entry, position) -> String.format(Locale.US, "%.2f%%", entry.percent * 100));
-        pieChart.addEntry(new PieChart.Entry(0.2801f, Color.parseColor("#9775E4"), true));
-        pieChart.addEntry(new PieChart.Entry(0.3955f, Color.parseColor("#49A5FF"), false));
-        pieChart.addEntry(new PieChart.Entry(0.2801f, Color.parseColor("#49D2C8"), false));
-        pieChart.addEntry(new PieChart.Entry(0.3955f, Color.parseColor("#01B07D"), false));
+        pieChart.setLabelFormatter((entry, position) -> String.format(Locale.US, "%.2f%%", entry.getPercent() * 100));
+        pieChart.addEntry(new PieView.Entry(0.2801f, Color.parseColor("#9775E4"), true));
+        pieChart.addEntry(new PieView.Entry(0.3955f, Color.parseColor("#49A5FF"), false));
+        pieChart.addEntry(new PieView.Entry(0.2801f, Color.parseColor("#49D2C8"), false));
+        pieChart.addEntry(new PieView.Entry(0.3955f, Color.parseColor("#01B07D"), false));
 //        pieChart.animateShow();
 
         percentChart = findViewById(R.id.percent_chart);
@@ -60,19 +63,19 @@ public class MainActivity extends AppCompatActivity {
 //        percentChart.setLabel("数字货币", Color.WHITE, 12);
 //        percentChart.animateShow();
 
-        linePieChart = findViewById(R.id.line_pie_chart);
+        linePieView = findViewById(R.id.line_pie_chart);
 //        linePieChart.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
 //        linePieChart.setEmptyColor(Color.parseColor("#111C24"));
 //        linePieChart.setAnimateDuration(animateDuration);
-        linePieChart.addEntry(new LinePieChart.Entry(0.30f, Color.parseColor("#9253D6")));
-        linePieChart.addEntry(new LinePieChart.Entry(0.02f, Color.parseColor("#49A5FF")));
-        linePieChart.addEntry(new LinePieChart.Entry(0.68f, Color.parseColor("#00B07C")));
+        linePieView.addEntry(new PercentChartEntry(Color.parseColor("#9253D6"), 0.30f));
+        linePieView.addEntry(new PercentChartEntry(Color.parseColor("#49A5FF"), 0.02f));
+        linePieView.addEntry(new PercentChartEntry(Color.parseColor("#00B07C"), 0.68f));
 //        linePieChart.animateShow();
 
-        linePercentChart0 = findViewById(R.id.line_percent_chart_0);
-        linePercentChart1 = findViewById(R.id.line_percent_chart_1);
-        linePercentChart2 = findViewById(R.id.line_percent_chart_2);
-        linePercentChart3 = findViewById(R.id.line_percent_chart_3);
+        linePercentView0 = findViewById(R.id.line_percent_chart_0);
+        linePercentView1 = findViewById(R.id.line_percent_chart_1);
+        linePercentView2 = findViewById(R.id.line_percent_chart_2);
+        linePercentView3 = findViewById(R.id.line_percent_chart_3);
 //        linePercentChart.setColor(Color.parseColor("#9775E4"));
 //        linePercentChart.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
 //        linePercentChart.setAnimateDuration(animateDuration);
@@ -87,14 +90,25 @@ public class MainActivity extends AppCompatActivity {
         List<Animator> animators = new ArrayList<>();
         for (int i = 0; i < circlePercentLayout.getChildCount(); i++) {
             View childAt = circlePercentLayout.getChildAt(i);
-            if (childAt instanceof CirclePercentChart) {
-                CirclePercentChart chart = (CirclePercentChart) childAt;
+            if (childAt instanceof CirclePercentView) {
+                CirclePercentView chart = (CirclePercentView) childAt;
                 animators.add(chart.getAnimator());
             }
         }
         animatorSet.playTogether(animators);
         circlePercentLayout.setOnClickListener(v -> animatorSet.start());
+
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                startActivity(new Intent(MainActivity.this, ChartActivity.class));
+                return super.onDoubleTap(e);
+            }
+        });
+        startActivity(new Intent(MainActivity.this, ChartActivity.class));
     }
+
+    GestureDetector gestureDetector;
 
     void findAnimatorChart(ViewGroup viewGroup, List<Animator> animators) {
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
@@ -119,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             animatorSet.playTogether(animators);
             animatorSet.start();
         }
+        gestureDetector.onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
     }
 

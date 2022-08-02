@@ -17,35 +17,39 @@ import androidx.core.content.res.ResourcesCompat;
 import com.tsh.chart.R;
 
 import java.util.List;
+import java.util.Locale;
 
-public class LabelPieChart extends PieChart {
+public class LabelPieView extends PieView {
 
     public interface LabelFormatter {
-        CharSequence format(Entry entry, int position);
+        CharSequence format(Entry entry, boolean hide);
     }
+
+    private static final LabelFormatter DEFAULT_LABEL_FORMATTER = ((entry, hide) ->
+            String.format(Locale.US, "%.2f%%", hide ? 0 : entry.getPercent() * 100));
 
     private final TextPaint textPaint;
     private Entry primaryEntry;
     int primaryPosition = -1;
-    LabelFormatter labelFormatter;
+    LabelFormatter labelFormatter = DEFAULT_LABEL_FORMATTER;
     float textSize;
     Typeface typeface;
 
-    public LabelPieChart(Context context) {
+    public LabelPieView(Context context) {
         this(context, null);
     }
 
-    public LabelPieChart(Context context, @Nullable AttributeSet attrs) {
+    public LabelPieView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LabelPieChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public LabelPieView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelPieChart)){
-            textSize = typedArray.getDimension(R.styleable.LabelPieChart_pieTextSize,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
-            if (typedArray.hasValue(R.styleable.LabelPieChart_pieTypeface)) {
-                int fontId = typedArray.getResourceId(R.styleable.LabelPieChart_pieTypeface, -1);
+        try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelPieView)){
+            textSize = typedArray.getDimension(R.styleable.LabelPieView_pieTextSize,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+            if (typedArray.hasValue(R.styleable.LabelPieView_pieTypeface)) {
+                int fontId = typedArray.getResourceId(R.styleable.LabelPieView_pieTypeface, -1);
                 typeface = ResourcesCompat.getFont(context, fontId);
             }
         }
@@ -64,7 +68,7 @@ public class LabelPieChart extends PieChart {
     @Override
     public void addEntry(Entry entry) {
         super.addEntry(entry);
-        if (entry.isPrimary) {
+        if (entry.isPrimary()) {
             primaryEntry = entry;
             primaryPosition = entries.size() - 1;
         }
@@ -84,7 +88,7 @@ public class LabelPieChart extends PieChart {
         super.setData(entries);
         for (int i = 0; i < entries.size(); i++) {
             Entry entry = entries.get(i);
-            if (entry.isPrimary) {
+            if (entry.isPrimary()) {
                 primaryEntry = entry;
                 primaryPosition = i;
                 break;
@@ -96,9 +100,9 @@ public class LabelPieChart extends PieChart {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (primaryEntry != null && labelFormatter != null) {
-            textPaint.setColor(primaryEntry.color);
+            textPaint.setColor(primaryEntry.getColor());
             textPaint.setTextSize(textSize);
-            CharSequence label = labelFormatter.format(primaryEntry, primaryPosition);
+            CharSequence label = labelFormatter.format(primaryEntry, hideDetail);
             canvas.drawText(label, 0, label.length(), circleRectF.centerX(), textCenterY(circleRectF, textPaint),
                     textPaint);
         }
