@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.tsh.chart.R;
@@ -38,10 +39,11 @@ public class LabelCirclePercentView extends CirclePercentView {
     public LabelCirclePercentView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelCirclePercentView)) {
-            textSize = typedArray.getDimension(R.styleable.LabelCirclePercentView_circlePercentTextSize,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            textSize = typedArray.getDimension(R.styleable.LabelCirclePercentView_circlePercentTextSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                    12, getResources().getDisplayMetrics()));
             text = typedArray.getString(R.styleable.LabelCirclePercentView_circlePercentText);
-            textColor = typedArray.getColor(R.styleable.LabelCirclePercentView_circlePercentTextColor, Color.LTGRAY);
+            textColor = typedArray.getColor(R.styleable.LabelCirclePercentView_circlePercentTextColor,
+                    ContextCompat.getColor(context, R.color.chart_legend_text_color));
             if (typedArray.hasValue(R.styleable.LabelCirclePercentView_circlePercentTypeface)) {
                 int fontId = typedArray.getResourceId(R.styleable.LabelCirclePercentView_circlePercentTypeface, -1);
                 setTypeface(ResourcesCompat.getFont(context, fontId));

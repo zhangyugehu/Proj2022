@@ -46,8 +46,8 @@ public class LabelPieView extends PieView {
     public LabelPieView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelPieView)){
-            textSize = typedArray.getDimension(R.styleable.LabelPieView_pieTextSize,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+            textSize = typedArray.getDimension(R.styleable.LabelPieView_pieTextSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                    10, getResources().getDisplayMetrics()));
             if (typedArray.hasValue(R.styleable.LabelPieView_pieTypeface)) {
                 int fontId = typedArray.getResourceId(R.styleable.LabelPieView_pieTypeface, -1);
                 typeface = ResourcesCompat.getFont(context, fontId);

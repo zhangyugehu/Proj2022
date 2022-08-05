@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.tsh.chart.IAnimatorChart;
 import com.tsh.chart.R;
@@ -59,15 +60,15 @@ public class CirclePercentChart extends LinearLayout implements IAnimatorChart {
             subTitleTextSize = (int) typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentSubTitleSize,
                     titleTextSize);
             titleTextColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentTitleColor,
-                    Color.parseColor("#ff5353"));
+                    ContextCompat.getColor(context, R.color.chart_legend_text_color));
             subTitleTextColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentSubTitleColor,
                     titleTextColor);
             titleTextHideColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentTitleHideColor,
-                    Color.parseColor("#A0A9BB"));
+                    ContextCompat.getColor(context, R.color.chart_sub_legend_text_color));
             subTitleTextHideColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentSubTitleHideColor,
                     titleTextHideColor);
             radiusBackgroundColor = typedArray.getColor(R.styleable.CirclePercentChart_circlePercentBackgroundColor,
-                    Color.parseColor("#18222B"));
+                    ContextCompat.getColor(context, R.color.chart_background_color));
             radius = (int) typedArray.getDimension(R.styleable.CirclePercentChart_circlePercentRadius,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, getResources().getDisplayMetrics()));
             title = typedArray.getString(R.styleable.CirclePercentChart_circlePercentTitle);

@@ -1,7 +1,6 @@
 package com.tsh.chart.pie;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -13,13 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.flexbox.AlignContent;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.flexbox.JustifyContent;
 import com.tsh.chart.PointTextView;
-import com.tsh.chart.data.ChartData;
+import com.tsh.chart.R;
+import com.tsh.chart.data.SimpleChartData;
 import com.tsh.chart.legend.LegendInflater;
 
 import java.util.List;
@@ -31,14 +32,14 @@ public class PieChart extends LinearLayout {
         LinearLayout linearLayout = new LinearLayout(context);
         PointTextView textView = new PointTextView(context);
         textView.setTextSize(13);
-        textView.setTextColor(Color.parseColor("#A0A9BB"));
+        textView.setTextColor(ContextCompat.getColor(context, R.color.chart_sub_legend_text_color));
         CharSequence legends = data.first;
         textView.setText(legends);
         textView.setColor(data.second.getColor());
         linearLayout.addView(textView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         TextView textViewPercent = new TextView(context);
         textViewPercent.setTextSize(13);
-        textViewPercent.setTextColor(Color.WHITE);
+        textViewPercent.setTextColor(ContextCompat.getColor(context, R.color.chart_legend_text_color));
         textViewPercent.setText(String.format(Locale.US, " %.2f%%",  hide? 0 :data.second.getPercent() * 100));
         linearLayout.addView(textViewPercent, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return linearLayout;
@@ -50,9 +51,9 @@ public class PieChart extends LinearLayout {
 
     LegendInflater<PieView.Entry> legendInflater = DEFAULT_LEGEND_INFLATER;
 
-    int radiusBackgroundColor = Color.parseColor("#18222B");
+    int radiusBackgroundColor;
     float radius;
-    ChartData<PieView.Entry> data;
+    SimpleChartData<PieView.Entry> data;
 
     public PieChart(@NonNull Context context) {
         this(context, null);
@@ -94,7 +95,7 @@ public class PieChart extends LinearLayout {
 
         radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         GradientDrawable gradientDrawable = new GradientDrawable();
-        gradientDrawable.setColor(radiusBackgroundColor);
+        gradientDrawable.setColor((radiusBackgroundColor = ContextCompat.getColor(context, R.color.chart_background_color)));
         gradientDrawable.setCornerRadius(radius);
         setBackground(gradientDrawable);
     }
@@ -118,7 +119,7 @@ public class PieChart extends LinearLayout {
         }
     }
 
-    public void setData(ChartData<PieView.Entry> data) {
+    public void setData(SimpleChartData<PieView.Entry> data) {
         this.data = data;
         pieView.setData(data.getData());
         setupLegendView();

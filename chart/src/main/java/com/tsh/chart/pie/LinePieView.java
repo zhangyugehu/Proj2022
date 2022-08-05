@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import com.tsh.chart.IAnimatorChart;
@@ -45,7 +46,7 @@ public class LinePieView extends View implements IAnimatorChart {
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
             animateDuration = typedArray.getInt(R.styleable.LinePieView_linePieAnimation, DEFAULT_ANIMATION);
             emptyColor = typedArray.getColor(R.styleable.LinePieView_linePieEmptyColor,
-                    Color.parseColor("#111C24"));
+                    ContextCompat.getColor(context, R.color.chart_empty_color));
         }
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeCap(Paint.Cap.ROUND);
@@ -113,15 +114,8 @@ public class LinePieView extends View implements IAnimatorChart {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height;
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        if (heightMode == MeasureSpec.AT_MOST) {
-            int paddingVertical = getPaddingTop() + getPaddingBottom();
-            height = (int) (paddingVertical + strokeWidth * 2);
-        } else {
-            height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
-        }
-        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec), height);
+        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec),
+                (int) (getPaddingTop() + getPaddingBottom() + strokeWidth * 2));
     }
 
     @Override

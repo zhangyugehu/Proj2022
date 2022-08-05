@@ -15,6 +15,7 @@ import android.view.View;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import com.tsh.chart.IAnimatorChart;
@@ -123,7 +124,7 @@ public class PieView extends View implements IAnimatorChart {
     private void initAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
         try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PieView)) {
             emptyColor = typedArray.getColor(R.styleable.PieView_pieEmptyColor,
-                    Color.parseColor("#111C24"));
+                    ContextCompat.getColor(context, R.color.chart_empty_color));
             strokeWidth = typedArray.getDimension(R.styleable.PieView_pieWidth,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics()));
             expansionFactor = typedArray.getFloat(R.styleable.PieView_pieFactor, DEFAULT_EXPANSION_FACTOR);

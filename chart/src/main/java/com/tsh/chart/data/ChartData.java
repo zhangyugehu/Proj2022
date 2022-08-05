@@ -2,15 +2,15 @@ package com.tsh.chart.data;
 
 import java.util.List;
 
-public class ChartData<T extends ChartEntry> {
-    List<CharSequence> xValues;
+public class ChartData<X, T extends IChartEntry> {
+    List<X> xValues;
     List<T> data;
 
-    public List<CharSequence> getxValues() {
+    public List<X> getxValues() {
         return xValues;
     }
 
-    public void setxValues(List<CharSequence> xValues) {
+    public void setxValues(List<X> xValues) {
         this.xValues = xValues;
     }
 

@@ -1,7 +1,6 @@
 package com.tsh.chart.percent;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -13,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.tsh.chart.PointTextView;
-import com.tsh.chart.data.ChartData;
+import com.tsh.chart.R;
+import com.tsh.chart.data.SimpleChartData;
 import com.tsh.chart.data.PercentChartEntry;
 import com.tsh.chart.legend.LegendInflater;
 import com.tsh.chart.pie.LinePieView;
@@ -28,18 +29,18 @@ public class LinePieChart extends LinearLayout {
     static final LegendInflater<PercentChartEntry> DEFAULT_LEGEND_INFLATER = (context, data, index, hide) -> {
         PointTextView pointTextView = new PointTextView(context);
         pointTextView.setTextSize(13);
-        pointTextView.setTextColor(Color.parseColor("#A0A9BB"));
+        pointTextView.setTextColor(ContextCompat.getColor(context, R.color.chart_sub_legend_text_color));
         pointTextView.setColor(data.second.getColor());
         pointTextView.setText(data.first);
         pointTextView.append("  ");
         SpannableString spannablePercent = new SpannableString(
                 String.format(Locale.US, "%.2f%%", hide?0:data.second.getPercent()));
-        spannablePercent.setSpan(new ForegroundColorSpan(Color.WHITE), 0, spannablePercent.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannablePercent.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.chart_legend_text_color)), 0, spannablePercent.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
         pointTextView.append(spannablePercent);
         return pointTextView;
     };
 
-    ChartData<PercentChartEntry> data;
+    SimpleChartData<PercentChartEntry> data;
     LinePieView vLinePieView;
     LinearLayout vLegendRoot;
     LegendInflater<PercentChartEntry> legendInflater = DEFAULT_LEGEND_INFLATER;
@@ -75,14 +76,14 @@ public class LinePieChart extends LinearLayout {
         );
 
         radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-        radiusBackgroundColor = Color.parseColor("#18222B");
+        radiusBackgroundColor = ContextCompat.getColor(context, R.color.chart_background_color);
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(radiusBackgroundColor);
         gradientDrawable.setCornerRadius(radius);
         setBackground(gradientDrawable);
     }
 
-    public void setData(ChartData<PercentChartEntry> data) {
+    public void setData(SimpleChartData<PercentChartEntry> data) {
         this.data = data;
         vLinePieView.setData(data.getData());
         inflateLegendView();

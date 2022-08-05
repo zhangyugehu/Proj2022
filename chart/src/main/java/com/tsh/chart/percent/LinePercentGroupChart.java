@@ -3,7 +3,6 @@ package com.tsh.chart.percent;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -15,9 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.TextViewCompat;
 
-import com.tsh.chart.data.ChartData;
+import com.tsh.chart.R;
+import com.tsh.chart.data.SimpleChartData;
 import com.tsh.chart.data.PercentChartEntry;
 import com.tsh.chart.legend.LegendInflater;
 
@@ -30,7 +31,7 @@ public class LinePercentGroupChart extends LinearLayout {
         TextView textView = new TextView(context);
         textView.setMaxLines(1);
         textView.setTextSize(13);
-        textView.setTextColor(Color.parseColor("#A0A9BB"));
+        textView.setTextColor(ContextCompat.getColor(context, R.color.chart_sub_legend_text_color));
         TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(textView,
                 6, 16, 1,
                 TypedValue.COMPLEX_UNIT_SP);
@@ -40,7 +41,7 @@ public class LinePercentGroupChart extends LinearLayout {
 
     LegendInflater<PercentChartEntry> labelInflater = DEFAULT_LABEL_INFLATER;
 
-    ChartData<PercentChartEntry> data;
+    SimpleChartData<PercentChartEntry> data;
 
     int radiusBackgroundColor;
     float radius;
@@ -60,8 +61,10 @@ public class LinePercentGroupChart extends LinearLayout {
         childViews = new ArrayList<>();
         setOrientation(LinearLayout.VERTICAL);
 
-        int paddingVertical = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics());
-        int paddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics());
+        int paddingVertical = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                14, getResources().getDisplayMetrics());
+        int paddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                14, getResources().getDisplayMetrics());
         radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         setPadding(
                 Math.max(paddingHorizontal, getPaddingStart()),
@@ -69,14 +72,14 @@ public class LinePercentGroupChart extends LinearLayout {
                 Math.max(paddingHorizontal, getPaddingEnd()),
                 Math.max(paddingVertical, getPaddingBottom())
         );
-        radiusBackgroundColor = Color.parseColor("#18222B");
+        radiusBackgroundColor = ContextCompat.getColor(context, R.color.chart_background_color);
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(radiusBackgroundColor);
         gradientDrawable.setCornerRadius(radius);
         setBackground(gradientDrawable);
     }
 
-    public void setData(ChartData<PercentChartEntry> data) {
+    public void setData(SimpleChartData<PercentChartEntry> data) {
         this.data = data;
         List<PercentChartEntry> entries;
         List<CharSequence> xValues;

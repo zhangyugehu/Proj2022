@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import com.tsh.chart.IAnimatorChart;
@@ -53,13 +54,13 @@ public class CirclePercentView extends View implements IAnimatorChart {
         super(context, attrs, defStyleAttr);
         try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CirclePercentView)) {
             percent = typedArray.getFloat(R.styleable.CirclePercentView_circlePercentValue, 0);
-            strokeWidth = typedArray.getDimension(R.styleable.CirclePercentView_circlePercentWidth,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics()));
+            strokeWidth = typedArray.getDimension(R.styleable.CirclePercentView_circlePercentWidth, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    3, getResources().getDisplayMetrics()));
             animateDuration = typedArray.getInt(R.styleable.CirclePercentView_circlePercentAnimateDuration, DEFAULT_ANIMATION);
             color = typedArray.getColor(R.styleable.CirclePercentView_circlePercentColor,
-                    Color.parseColor("#111C24"));
+                    ContextCompat.getColor(context, R.color.chart_empty_color));
             activeColor = typedArray.getColor(R.styleable.CirclePercentView_circlePercentActiveColor,
-                    Color.parseColor("#49A5FF"));
+                    ContextCompat.getColor(context, R.color.chart_active_color));
         }
         labelRectF = new RectF();
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);

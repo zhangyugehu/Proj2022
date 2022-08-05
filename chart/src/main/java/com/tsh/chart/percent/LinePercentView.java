@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import com.tsh.chart.IAnimatorChart;
@@ -65,13 +66,15 @@ public class LinePercentView extends View implements IAnimatorChart {
     public LinePercentView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         try (TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinePercentView)) {
-            strokeWidth = typedArray.getDimension(R.styleable.LinePercentView_linePercentWidth,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
+            strokeWidth = typedArray.getDimension(R.styleable.LinePercentView_linePercentWidth, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    6, getResources().getDisplayMetrics()));
             animateDuration = typedArray.getInt(R.styleable.LinePercentView_linePercentAnimation, DEFAULT_ANIMATION);
-            color = typedArray.getColor(R.styleable.LinePercentView_linePercentColor, Color.DKGRAY);
-            textColor = typedArray.getColor(R.styleable.LinePercentView_linePercentTextColor, Color.WHITE);
-            textSize = typedArray.getDimension(R.styleable.LinePercentView_linePercentTextSize,
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            color = typedArray.getColor(R.styleable.LinePercentView_linePercentColor,
+                    ContextCompat.getColor(context, R.color.chart_empty_color));
+            textColor = typedArray.getColor(R.styleable.LinePercentView_linePercentTextColor,
+                    ContextCompat.getColor(context, R.color.chart_legend_text_color));
+            textSize = typedArray.getDimension(R.styleable.LinePercentView_linePercentTextSize, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                    12, getResources().getDisplayMetrics()));
             textPadding = typedArray.getDimension(R.styleable.LinePercentView_linePercentTextPadding,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
             percent = typedArray.getFloat(R.styleable.LinePercentView_linePercentValue, 0);
@@ -164,15 +167,8 @@ public class LinePercentView extends View implements IAnimatorChart {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height;
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        if (heightMode == MeasureSpec.AT_MOST) {
-            int paddingVertical = getPaddingTop() + getPaddingBottom();
-            height = (int) (paddingVertical + strokeWidth * 2);
-        } else {
-            height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
-        }
-        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec), height);
+        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec),
+                (int) (getPaddingTop() + getPaddingBottom() + strokeWidth * 2));
     }
 
     @Override

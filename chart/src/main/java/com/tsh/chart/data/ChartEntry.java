@@ -1,6 +1,6 @@
 package com.tsh.chart.data;
 
-public abstract class ChartEntry {
+public abstract class ChartEntry implements IChartEntry {
     public ChartEntry(int color) {
         this.color = color;
     }

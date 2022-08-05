@@ -1,99 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingHorizontal="14dp"
-    android:background="#0e161b"
-    android:paddingVertical="20dp"
-    tools:context=".example.ChartActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/circle_percent_chart_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/background_color"
+        android:orientation="vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="20dp"
+        tools:context=".example.ChartActivity">
 
-        <com.tsh.chart.percent.CirclePercentChart
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:circlePercentActiveColor="#49A5FF"
-            app:circlePercentBackgroundColor="@color/teal_200"
-            app:circlePercentColor="@color/teal_700"
-            app:circlePercentSubTitle="+8.98%"
-            app:circlePercentText="股票"
-            app:circlePercentTextColor="@color/white"
-            app:circlePercentTextSize="11sp"
-            app:circlePercentTitle="+69,544.634"
-            app:circlePercentTitleColor="@color/purple_200"
-            app:circlePercentValue="0.4" />
+        <com.tsh.chart.bar.LineBarChartBase
+            android:id="@+id/line_bar_chart"
+            android:layout_width="match_parent"
+            android:layout_height="230dp" />
 
-        <com.tsh.chart.percent.CirclePercentChart
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/circle_percent_chart_group"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_weight="1"
-            app:circlePercentActiveColor="#49A5FF"
-            app:circlePercentColor="#111C24"
-            app:circlePercentSubTitle="+8.98%"
-            app:circlePercentText="期权"
-            app:circlePercentTextColor="@color/white"
-            app:circlePercentTextSize="11sp"
-            app:circlePercentTitle="+69,544.634"
-            app:circlePercentValue="0.2" />
+            android:orientation="horizontal">
 
-        <com.tsh.chart.percent.CirclePercentChart
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            app:circlePercentActiveColor="#49A5FF"
-            app:circlePercentColor="#111C24"
-            app:circlePercentSubTitle="+8.98%"
-            app:circlePercentText="投顾"
-            app:circlePercentTextColor="@color/white"
-            app:circlePercentTextSize="11sp"
-            app:circlePercentTitle="+69,544.634"
-            app:circlePercentValue="0.2" />
+            <com.tsh.chart.percent.CirclePercentChart
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:circlePercentActiveColor="#49A5FF"
+                app:circlePercentBackgroundColor="@color/teal_200"
+                app:circlePercentColor="@color/teal_700"
+                app:circlePercentSubTitle="+8.98%"
+                app:circlePercentText="股票"
+                app:circlePercentTextColor="@color/white"
+                app:circlePercentTextSize="11sp"
+                app:circlePercentTitle="+69,544.634"
+                app:circlePercentTitleColor="@color/purple_200"
+                app:circlePercentValue="0.4" />
 
-        <com.tsh.chart.percent.CirclePercentChart
-            android:layout_width="0dp"
+            <com.tsh.chart.percent.CirclePercentChart
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:circlePercentSubTitle="+8.98%"
+                app:circlePercentText="期权"
+                app:circlePercentTextSize="11sp"
+                app:circlePercentTitle="+69,544.634"
+                app:circlePercentValue="0.2" />
+
+            <com.tsh.chart.percent.CirclePercentChart
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                app:circlePercentSubTitle="+8.98%"
+                app:circlePercentText="投顾"
+                app:circlePercentTextSize="11sp"
+                app:circlePercentTitle="+69,544.634"
+                app:circlePercentValue="0.2" />
+
+            <com.tsh.chart.percent.CirclePercentChart
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:circlePercentSubTitle="+8.98%"
+                app:circlePercentText="数字货币"
+                app:circlePercentTextSize="11sp"
+                app:circlePercentTitle="+69,544.634"
+                app:circlePercentValue="0.2" />
+        </LinearLayout>
+
+        <com.tsh.chart.pie.PieChart
+            android:id="@+id/pie_chart"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:circlePercentActiveColor="#49A5FF"
-            app:circlePercentColor="#111C24"
-            app:circlePercentSubTitle="+8.98%"
-            app:circlePercentText="数字货币"
-            app:circlePercentTextColor="@color/white"
-            app:circlePercentTextSize="11sp"
-            app:circlePercentTitle="+69,544.634"
-            app:circlePercentValue="0.2" />
+            android:layout_marginTop="20dp" />
+
+        <com.tsh.chart.pie.PieChart
+            android:id="@+id/pie_chart_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" />
+
+        <com.tsh.chart.percent.LinePercentGroupChart
+            android:id="@+id/line_distribution_chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" />
+
+        <com.tsh.chart.percent.LinePieChart
+            android:id="@+id/line_pie_chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" />
     </LinearLayout>
-
-    <com.tsh.chart.pie.PieChart
-        android:id="@+id/pie_chart"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.tsh.chart.pie.PieChart
-        android:id="@+id/pie_chart_2"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.tsh.chart.percent.LinePercentGroupChart
-        android:id="@+id/line_distribution_chart"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.tsh.chart.percent.LinePieChart
-        android:id="@+id/line_pie_chart"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>
