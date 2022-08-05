@@ -4,12 +4,19 @@ import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ViewParent;
+import android.widget.ScrollView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -21,6 +28,7 @@ import com.tsh.chart.data.ChartData;
 import com.tsh.chart.data.ChartEntrySet;
 import com.tsh.chart.data.PercentChartEntry;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,6 +40,10 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
 
     public interface YAxisFormatter<T> {
         CharSequence format(T data);
+    }
+
+    public interface OnSelectListener {
+        void onSelected(int index, int subIndex);
     }
 
     public static class EntrySet extends ChartEntrySet<PercentChartEntry> {
@@ -52,6 +64,9 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
 
     float xAxisTextSize;
     int xAxisTextColor;
+    int xAxisHighlightColor;
+    float xAxisHighlightMargin;
+    float xAxisHighlightRadius;
     int xAxisBackgroundColor;
     float xAxisItemWidth;
     float xAxisSpacing;
@@ -59,6 +74,7 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
     float xAxisPaddingStart;
     float xAxisPaddingEnd;
     float xWidthHalf;
+    float xAxisEntryWidth;
 
     float yAxisTextSize;
     float yAxisLineWidth;
@@ -75,7 +91,14 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
     boolean yAxisLine = true;
     RectF yAxisRect;
 
+    final Mapping mapping;
+    final Mapping yAxisValueMapping;
+    final int[] touchIndex;
+
+    final GestureDetector gestureDetector;
+
     YAxisFormatter<Float> yAxisFormatter = data -> String.format(Locale.US, "%.0f%%", data * 100);
+    OnSelectListener onSelectListener;
 
     public LineBarChartBase(Context context) {
         this(context, null);
@@ -89,12 +112,19 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         super(context, attrs, defStyleAttr);
         chartPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         axisPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        mapping = new Mapping();
+        yAxisValueMapping = new Mapping();
+        touchIndex = new int[] {-1, -1};
+        gestureDetector = new GestureDetector(context, highlightGestureDetector);
         axisPaint.setTextAlign(Paint.Align.CENTER);
 
         xAxisBackgroundColor = ContextCompat.getColor(context, R.color.chart_background_color);
         xAxisTextColor = ContextCompat.getColor(context, R.color.chart_legend_text_color);
+        xAxisHighlightColor = ContextCompat.getColor(context, R.color.chart_active_color);
         xAxisPaddingStart = 0;//dp(10);
         xAxisPaddingEnd = 0;//dp(10);
+        xAxisHighlightMargin = dp(1);
+        xAxisHighlightRadius = dp(2);
 
         yAxisTextColor = ContextCompat.getColor(context, R.color.chart_legend_text_color);
         yAxisLineColor = ContextCompat.getColor(context, R.color.chart_background_color);
@@ -105,6 +135,10 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         xAxisEntrySpacing = dp(1);
         yAxisRemained = dp(30);
         yAxisRect = new RectF();
+    }
+
+    public void setOnSelectListener(OnSelectListener onSelectListener) {
+        this.onSelectListener = onSelectListener;
     }
 
     public void setData(ChartData<X, EntrySet> data) {
@@ -131,10 +165,38 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         setMeasuredDimension(width, height);
     }
 
+    public void unFocusHighlight() {
+        touchIndex[0] = -1;
+        touchIndex[1] = -1;
+        if (onSelectListener != null) {
+            onSelectListener.onSelected(-1, -1);
+        }
+        invalidate();
+    }
+
+    public void focusHighlight(int index) {
+        touchIndex[0] = index;
+        touchIndex[1] = -1;
+        if (onSelectListener != null) {
+            onSelectListener.onSelected(touchIndex[0], touchIndex[1]);
+        }
+        invalidate();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            xToIndex(event.getX(), touchIndex);
+            if (onSelectListener != null) {
+                onSelectListener.onSelected(touchIndex[0], touchIndex[1]);
+            }
+            postInvalidate();
+        }
         return super.onTouchEvent(event);
     }
+
+    final GestureDetector.SimpleOnGestureListener highlightGestureDetector = new GestureDetector.SimpleOnGestureListener() {
+    };
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -142,7 +204,6 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         onDrawBackground(canvas);
         onDrawAxis(canvas);
         onDrawEntries(canvas);
-        onDrawHighlight(canvas);
     }
 
     private void onDrawBackground(Canvas canvas) {
@@ -152,60 +213,20 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
     RectF xAxisRect = new RectF();
 
     protected void onDrawAxis(Canvas canvas) {
-        float xAxisTextCenterY = 0;
         int viewCenterY = getHeight() >> 1;
+        // xAxis background
         axisPaint.setColor(xAxisTextColor);
         axisPaint.setTextSize(xAxisTextSize);
-        if (data != null && data.getxValues() != null) {
-            // xAxis
-            axisPaint.setTextAlign(Paint.Align.CENTER);
-            chartPaint.setColor(xAxisBackgroundColor);
-            chartPaint.setStyle(Paint.Style.FILL);
-            float availableWidth = getWidth()
-                    - getPaddingStart()
-                    - getPaddingEnd()
-                    - yAxisRemained
-                    - xAxisPaddingStart
-                    - xAxisPaddingEnd;
-            calcXAxisTextSizeAndSpacing(availableWidth);
-            axisPaint.getFontMetrics(centerMetrics);
-            float textHeightHalf = (centerMetrics.bottom - centerMetrics.top) / 2;
-            xAxisRect.set(getPaddingStart(),
-                    viewCenterY - textHeightHalf,
-                    getWidth() - getPaddingEnd(),
-                    viewCenterY + textHeightHalf);
-            canvas.drawRect(xAxisRect, chartPaint);
-            canvas.save();
-            canvas.translate(yAxisRemained, 0);
-            float startX = 0;
-            List<X> xAxes = this.data.getxValues();
-            xAxisTextCenterY = textCenterY(xAxisRect.centerY(), axisPaint);
-            for (int i = 0; i < xAxes.size(); i++) {
-                CharSequence source = xAxes.get(i).toReadable();
-                xWidthHalf = xAxisItemWidth / 2;
-                float startXFixed;
-                if (axisPaint.getTextAlign() == Paint.Align.CENTER) {
-                    startXFixed = startX + xWidthHalf;
-                } else if (axisPaint.getTextAlign() == Paint.Align.RIGHT) {
-                    startXFixed = startX + xWidthHalf * 2;
-                } else {
-                    startXFixed = startX;
-                }
-                canvas.drawText(source, 0, source.length(), startXFixed, xAxisTextCenterY, axisPaint);
-                if (SHOW_DEBUG_VIEW) {
-                    chartPaint.setColor(Color.parseColor("#80FF00FF"));
-                    canvas.drawRect(
-                            startX, viewCenterY - textHeightHalf,
-                            startX + xWidthHalf, viewCenterY + textHeightHalf, chartPaint);
-                    chartPaint.setColor(Color.parseColor("#80FFFF00"));
-                    canvas.drawRect(
-                            startX + xWidthHalf, viewCenterY - textHeightHalf,
-                            startX + xWidthHalf * 2, viewCenterY + textHeightHalf, chartPaint);
-                }
-                startX += xAxisItemWidth + xAxisSpacing;
-            }
-            canvas.restore();
-        }
+        axisPaint.getFontMetrics(centerMetrics);
+        float textHeightHalf = (centerMetrics.bottom - centerMetrics.top) / 2;
+        xAxisRect.set(getPaddingStart(),
+                viewCenterY - textHeightHalf,
+                getWidth() - getPaddingEnd(),
+                viewCenterY + textHeightHalf);
+        float xAxisTextCenterY = textCenterY(xAxisRect.centerY(), axisPaint);
+        chartPaint.setColor(xAxisBackgroundColor);
+        chartPaint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(xAxisRect, chartPaint);
         if (data != null && data.getData() != null) {
             // yAxis
             axisPaint.setTextSize(yAxisTextSize);
@@ -218,6 +239,8 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
                     - getPaddingTop()
                     - getPaddingBottom()) / 2;
             yAxisMaxWithFactor = Math.max(Math.abs(yAxisMax), Math.abs(yAxisMin)) * yAxisFactor;
+            yAxisValueMapping.setSrc(yAxisMaxWithFactor, -yAxisMaxWithFactor);
+            yAxisValueMapping.setDest(yAxisTextHeight / 2, getHeight() - yAxisTextHeight / 2);
             mapping.setDest(yAxisTextHeight / 2, availableHeightHalf);
             mapping.setSrc(0, yAxisMaxWithFactor);
             float stepYAxisValue = yAxisMaxWithFactor / yAxisCount;
@@ -254,6 +277,47 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
                 axisPaint.setColor(yAxisTextColor);
                 canvas.drawText(belowText, 0, belowText.length(), getPaddingStart(), belowHorizonY, axisPaint);
             }
+        }
+        if (data != null && data.getxValues() != null) {
+            // xAxis
+            axisPaint.setTextAlign(Paint.Align.CENTER);
+            float availableWidth = getWidth()
+                    - getPaddingStart()
+                    - getPaddingEnd()
+                    - yAxisRemained
+                    - xAxisPaddingStart
+                    - xAxisPaddingEnd;
+            calcXAxisTextSizeAndSpacing(availableWidth);
+            canvas.save();
+            canvas.translate(yAxisRemained, 0);
+            float startX = 0;
+            onDrawHighlight(canvas);
+            List<X> xAxes = this.data.getxValues();
+            for (int i = 0; i < xAxes.size(); i++) {
+                CharSequence source = xAxes.get(i).toReadable();
+                xWidthHalf = xAxisItemWidth / 2;
+                float startXFixed;
+                if (axisPaint.getTextAlign() == Paint.Align.CENTER) {
+                    startXFixed = startX + xWidthHalf;
+                } else if (axisPaint.getTextAlign() == Paint.Align.RIGHT) {
+                    startXFixed = startX + xWidthHalf * 2;
+                } else {
+                    startXFixed = startX;
+                }
+                canvas.drawText(source, 0, source.length(), startXFixed, xAxisTextCenterY, axisPaint);
+                if (SHOW_DEBUG_VIEW) {
+                    chartPaint.setColor(Color.parseColor("#80FF00FF"));
+                    canvas.drawRect(
+                            startX, viewCenterY - textHeightHalf,
+                            startX + xWidthHalf, viewCenterY + textHeightHalf, chartPaint);
+                    chartPaint.setColor(Color.parseColor("#80FFFF00"));
+                    canvas.drawRect(
+                            startX + xWidthHalf, viewCenterY - textHeightHalf,
+                            startX + xWidthHalf * 2, viewCenterY + textHeightHalf, chartPaint);
+                }
+                startX += xAxisItemWidth + xAxisSpacing;
+            }
+            canvas.restore();
         }
     }
 
@@ -293,7 +357,6 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
     }
 
     private static final String TAG = "LineBarChartBase";
-    Mapping mapping = new Mapping();
 
     protected void onDrawEntries(Canvas canvas) {
         List<EntrySet> entrySets;
@@ -320,7 +383,7 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
                 EntrySet entrySet = entrySets.get(i);
                 List<PercentChartEntry> entries;
                 if (entrySet != null && (entries = entrySet.getEntrySet()) != null) {
-                    float entryWidth = (entrySetWidth - ((entries.size() - 1) * xAxisEntrySpacing)) / entries.size();
+                    xAxisEntryWidth = (entrySetWidth - ((entries.size() - 1) * xAxisEntrySpacing)) / entries.size();
                     for (int j = 0; j < entries.size(); j++) {
                         PercentChartEntry entry = entries.get(j);
                         chartPaint.setColor(entry.getColor());
@@ -338,7 +401,7 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
                         entryRect.set(
                                 startX,
                                 entryYValue,
-                                startX + entryWidth,
+                                startX + xAxisEntryWidth,
                                 baseY);
                         canvas.drawRect(entryRect, chartPaint);
                         startX += entryRect.width() + xAxisEntrySpacing;
@@ -349,9 +412,61 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         }
     }
 
+    public float yToPercent(float y) {
+        // TODO: 2022/8/5  
+        return yAxisValueMapping.mapValue(y);
+    }
+
+    public void xToIndex(float x, @NonNull int[] indexes) {
+        indexes[0] = (int) (x / (xAxisItemWidth + xAxisSpacing)) - 1;
+        if (indexes[0] > -1) {
+            float startX = (xAxisItemWidth + xAxisSpacing) * (indexes[0] + 1);
+            indexes[1] = (int) ((x - startX) / (xAxisEntryWidth + xAxisEntrySpacing));
+        } else {
+            indexes[1] = -1;
+        }
+    }
+
     RectF entryRect = new RectF();
 
-    protected void onDrawHighlight(Canvas canvas) {
+    LinearGradient linearGradient;
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        linearGradient = new LinearGradient(200, h, 0, 0, new int[] {
+                        Color.parseColor("#00FFFF00"),
+                        Color.parseColor("#80FFFF00"),
+                        Color.parseColor("#00FFFF00")
+                }, new float[] {
+                        0, (h >> 1), h
+                }, Shader.TileMode.CLAMP);
+    }
 
+    protected void onDrawHighlight(Canvas canvas) {
+        int touchEntrySetIndex = touchIndex[0];
+        if (touchEntrySetIndex > -1) {
+            float left = (xAxisItemWidth * touchEntrySetIndex) + (xAxisSpacing * touchEntrySetIndex);
+            chartPaint.setShader(new LinearGradient(0, 0, 0, getHeight(),
+                    new int[]{
+                            Color.TRANSPARENT,
+                            ContextCompat.getColor(getContext(), R.color.chart_highlight_color),
+                            Color.TRANSPARENT
+                    },
+                    new float[]{0, 0.5f, 1},
+                    Shader.TileMode.CLAMP));
+            canvas.drawRect(left, 0, left + xAxisItemWidth, getHeight(), chartPaint);
+            chartPaint.setShader(null);
+            chartPaint.setColor(xAxisHighlightColor);
+            axisPaint.setTextSize(xAxisTextSize);
+            axisPaint.getFontMetrics(centerMetrics);
+            float xAxisTextHeightHalf = (centerMetrics.bottom - centerMetrics.top) / 2;
+            int viewCenterY = getHeight() >> 1;
+            canvas.drawRoundRect(
+                    left,
+                    viewCenterY - xAxisTextHeightHalf + xAxisHighlightMargin,
+                    left + xAxisItemWidth,
+                    viewCenterY + xAxisTextHeightHalf - xAxisHighlightMargin,
+                    xAxisHighlightRadius, xAxisHighlightRadius, chartPaint);
+        }
     }
 }

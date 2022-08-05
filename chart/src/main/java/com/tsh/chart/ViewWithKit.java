@@ -6,6 +6,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
 
@@ -46,6 +47,14 @@ public class ViewWithKit extends View {
     public float textCenterY(float centerY, Paint paint) {
         paint.getFontMetrics(centerMetrics);
         return centerY + (centerMetrics.bottom - centerMetrics.top) / 2 - centerMetrics.bottom;
+    }
+
+    private void tryDisAllowScrollParent(boolean disallowIntercept) {
+        ViewParent parent = getParent();
+        while (parent != null) {
+            parent.requestDisallowInterceptTouchEvent(disallowIntercept);
+            parent = parent.getParent();
+        }
     }
 
 }

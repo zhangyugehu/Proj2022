@@ -12,6 +12,7 @@
     <color name="chart_background_color">#FEFFFF</color>
     <color name="chart_empty_color">#FAFBFC</color>
     <color name="chart_active_color">#49a5ff</color>
+    <color name="chart_highlight_color">#3349a5ff</color>
     <color name="chart_legend_text_color">#20282f</color>
     <color name="chart_sub_legend_text_color">#717273</color>
 </resources>
