@@ -79,16 +79,16 @@ public class ChartActivity extends AppCompatActivity {
         List<LineBarChartBase.EntrySet> entrySets = new ArrayList<>();
         for (int i = 1; i <= 12; i++) {
             xVals.add(new XAxis(i));
-//            entrySets.add(new LineBarChartBase.EntrySet(Arrays.asList(
-//                    new PercentChartEntry(Color.parseColor("#9775E4"), randomPercent()),
-//                    new PercentChartEntry(Color.parseColor("#49D2C8"), randomPercent()),
-//                    new PercentChartEntry(Color.parseColor("#01B07D"), randomPercent()),
-//                    new PercentChartEntry(Color.parseColor("#01B07D"), randomPercent())
-//            )));
             entrySets.add(new LineBarChartBase.EntrySet(Arrays.asList(
-                    new PercentChartEntry(Color.parseColor("#9775E4"), 0.3f),
+                    new PercentChartEntry(Color.parseColor("#9775E4"), randomPercent()),
+//                    new PercentChartEntry(Color.parseColor("#49D2C8"), randomPercent()),
+                    new PercentChartEntry(Color.parseColor("#01B07D"), randomPercent())
+//                    new PercentChartEntry(Color.parseColor("#01B07D"), randomPercent())
+            )));
+            entrySets.add(new LineBarChartBase.EntrySet(Arrays.asList(
+//                    new PercentChartEntry(Color.parseColor("#9775E4"), 0.3f),
                     new PercentChartEntry(Color.parseColor("#49D2C8"), 0.7f),
-                    new PercentChartEntry(Color.parseColor("#01B07D"), -0.1f),
+//                    new PercentChartEntry(Color.parseColor("#01B07D"), -0.1f),
                     new PercentChartEntry(Color.parseColor("#01B07D"), 0.2f)
             )));
         }
@@ -97,6 +97,7 @@ public class ChartActivity extends AppCompatActivity {
         lineBarChart.setData(data);
         lineBarChart.setOnSelectListener((index, subIndex) ->
                 Toast.makeText(this, "Select: " + index + "-" + subIndex, Toast.LENGTH_LONG).show());
+        lineBarChart.showAnimator();
     }
 
     private void initLinePieChartData() {

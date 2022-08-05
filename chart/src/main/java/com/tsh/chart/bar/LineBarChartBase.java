@@ -1,6 +1,7 @@
 package com.tsh.chart.bar;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewParent;
+import android.view.animation.LinearInterpolator;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,7 @@ import java.util.Locale;
 
 public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWithKit implements IAnimatorChart {
     private static final boolean SHOW_DEBUG_VIEW = false;
+
     public interface XAxis {
         CharSequence toReadable();
     }
@@ -83,7 +86,7 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
     float yAxisRemained;
     float yAxisMax = 0, yAxisMin = 0;
     float yAxisMaxWithFactor;
-    float yAxisFactor = 1.0f;
+    float yAxisFactor = 1.2f;
     int yAxisCount = 4;
     /**
      * y 轴指示线
@@ -95,10 +98,13 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
     final Mapping yAxisValueMapping;
     final int[] touchIndex;
 
+    final RectF entryRect;
+
     final GestureDetector gestureDetector;
 
     YAxisFormatter<Float> yAxisFormatter = data -> String.format(Locale.US, "%.0f%%", data * 100);
     OnSelectListener onSelectListener;
+    float animatorPercent = 1;
 
     public LineBarChartBase(Context context) {
         this(context, null);
@@ -116,6 +122,7 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         yAxisValueMapping = new Mapping();
         touchIndex = new int[] {-1, -1};
         gestureDetector = new GestureDetector(context, highlightGestureDetector);
+        entryRect = new RectF();
         axisPaint.setTextAlign(Paint.Align.CENTER);
 
         xAxisBackgroundColor = ContextCompat.getColor(context, R.color.chart_background_color);
@@ -146,6 +153,7 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         List<EntrySet> entrySets;
         if (data != null && (entrySets = data.getData()) != null) {
             calcMaxMin(entrySets);
+            animatorPercent = yAxisMax;
         }
     }
 
@@ -153,9 +161,21 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         return data;
     }
 
+    public void setAnimatorPercent(float animatorPercent) {
+        this.animatorPercent = animatorPercent;
+        invalidate();
+    }
+
+    public void showAnimator() {
+        if (data != null) {
+            getAnimator().start();
+        }
+    }
+
     @Override
     public Animator getAnimator() {
-        return null;
+        return ObjectAnimator.ofFloat(this, "animatorPercent", 0, yAxisMax)
+                .setDuration(DEFAULT_ANIMATION);
     }
 
     @Override
@@ -397,7 +417,13 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
                             mapping.setSrc(0, -yAxisMaxWithFactor);
                             mapping.setDest(baseY, availableHeight - yAxisTextHeight / 2);
                         }
-                        float entryYValue = mapping.mapValue(entry.getPercent());
+                        float percent;
+                        if (Math.abs(entry.getPercent()) > animatorPercent) {
+                            percent = animatorPercent * (entry.getPercent() > 0 ? 1 : -1);
+                        } else {
+                            percent = entry.getPercent();
+                        }
+                        float entryYValue = mapping.mapValue(percent);
                         entryRect.set(
                                 startX,
                                 entryYValue,
@@ -425,21 +451,6 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
         } else {
             indexes[1] = -1;
         }
-    }
-
-    RectF entryRect = new RectF();
-
-    LinearGradient linearGradient;
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        linearGradient = new LinearGradient(200, h, 0, 0, new int[] {
-                        Color.parseColor("#00FFFF00"),
-                        Color.parseColor("#80FFFF00"),
-                        Color.parseColor("#00FFFF00")
-                }, new float[] {
-                        0, (h >> 1), h
-                }, Shader.TileMode.CLAMP);
     }
 
     protected void onDrawHighlight(Canvas canvas) {
