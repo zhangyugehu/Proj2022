@@ -14,16 +14,27 @@
         android:paddingVertical="20dp"
         tools:context=".example.ChartActivity">
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/mp_line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <com.tsh.chart.line.LineChart
+            android:id="@+id/line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
         <com.tsh.chart.bar.LineBarChartBase
             android:id="@+id/line_bar_chart"
             android:layout_width="match_parent"
-            android:layout_height="230dp" />
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp" />
 
         <LinearLayout
             android:id="@+id/circle_percent_chart_group"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <com.tsh.chart.percent.CirclePercentChart

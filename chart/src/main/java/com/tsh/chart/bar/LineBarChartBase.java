@@ -11,12 +11,8 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ViewParent;
-import android.view.animation.LinearInterpolator;
-import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +26,6 @@ import com.tsh.chart.data.ChartData;
 import com.tsh.chart.data.ChartEntrySet;
 import com.tsh.chart.data.PercentChartEntry;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,9 +45,8 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
     }
 
     public static class EntrySet extends ChartEntrySet<PercentChartEntry> {
-
-        public EntrySet(List<PercentChartEntry> entrySet) {
-            super(entrySet);
+        public EntrySet(CharSequence label, List<PercentChartEntry> entrySet) {
+            super(label, entrySet);
         }
     }
 
@@ -344,7 +338,7 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
     void calcMaxMin(List<EntrySet> entrySets) {
         for (int i = 0; entrySets != null && i < entrySets.size(); i++) {
             EntrySet entrySet = entrySets.get(i);
-            List<PercentChartEntry> entries = entrySet.getEntrySet();
+            List<PercentChartEntry> entries = entrySet.getEntries();
             for (int j = 0; entries != null && j < entries.size(); j++) {
                 PercentChartEntry entry = entries.get(j);
                 if (entry != null) {
@@ -402,7 +396,7 @@ public class LineBarChartBase<X extends LineBarChartBase.XAxis> extends ViewWith
             for (int i = 0; i < entrySets.size(); i++) {
                 EntrySet entrySet = entrySets.get(i);
                 List<PercentChartEntry> entries;
-                if (entrySet != null && (entries = entrySet.getEntrySet()) != null) {
+                if (entrySet != null && (entries = entrySet.getEntries()) != null) {
                     xAxisEntryWidth = (entrySetWidth - ((entries.size() - 1) * xAxisEntrySpacing)) / entries.size();
                     for (int j = 0; j < entries.size(); j++) {
                         PercentChartEntry entry = entries.get(j);

@@ -19,4 +19,8 @@ public class Mapping {
     public float mapValue(float srcValue) {
         return destMin + ((destMax - destMin) / (srcMax - srcMin)) * (srcValue - srcMin);
     }
+
+    public float remapValue(float destValue) {
+        return srcMin + ((srcMax - srcMin) / (destMax - destMin)) * (destValue - destMin);
+    }
 }

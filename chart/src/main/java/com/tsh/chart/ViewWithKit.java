@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 public class ViewWithKit extends View {
 
     protected final Paint.FontMetrics centerMetrics;
+    protected final Paint.FontMetrics heightMetrics;
 
     public ViewWithKit(Context context) {
         this(context, null);
@@ -29,13 +30,14 @@ public class ViewWithKit extends View {
     public ViewWithKit(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         centerMetrics = new Paint.FontMetrics();
+        heightMetrics = new Paint.FontMetrics();
     }
 
-    protected float dp(float value) {
+    public float dp(float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, getResources().getDisplayMetrics());
     }
 
-    protected float sp(float value) {
+    public float sp(float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, getResources().getDisplayMetrics());
     }
 
@@ -49,7 +51,12 @@ public class ViewWithKit extends View {
         return centerY + (centerMetrics.bottom - centerMetrics.top) / 2 - centerMetrics.bottom;
     }
 
-    private void tryDisAllowScrollParent(boolean disallowIntercept) {
+    public float textHeight(Paint paint) {
+        paint.getFontMetrics(heightMetrics);
+        return heightMetrics.bottom - heightMetrics.top;
+    }
+
+    protected void tryDisallowScrollParent(boolean disallowIntercept) {
         ViewParent parent = getParent();
         while (parent != null) {
             parent.requestDisallowInterceptTouchEvent(disallowIntercept);
