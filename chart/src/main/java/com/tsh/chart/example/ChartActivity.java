@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -179,7 +180,7 @@ public class ChartActivity extends AppCompatActivity {
     private void initLineChart() {
         lineChart.getLineChartBase().setMarksRender(new SimpleLineChartMarkRender<>(lineChart.getLineChartBase()));
         ChartData<LineChartXAxis, LineChartBase.EntrySet<LineChartEntry>> data = new ChartData<>();
-        int count = 150;
+        int count = 15000;
         long now = System.currentTimeMillis();
         List<LineChartXAxis> xValues = new ArrayList<>();
         List<LineChartEntry> entries1 = new ArrayList<>();
@@ -219,8 +220,13 @@ public class ChartActivity extends AppCompatActivity {
         set2.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, getResources().getDisplayMetrics()));
         data.setData(Arrays.asList(set1));
 //        lineChart.getLineChartBase().setDefaultIndex(xValues.size());
+        lineChart.getLineChartBase().setOnHighlightChangeListener((index, prev) -> {
+            Log.i(TAG, "initLineChart: " + prev + ">>>" + index);
+        });
         lineChart.setData(data);
     }
+
+    private static final String TAG = "ChartActivity";
 
     private void initLineBarChart() {
 

@@ -93,6 +93,10 @@ public class LineChartBase<X extends LineChartBase.XAxis, E extends LineChartBas
         CharSequence getLabel();
     }
 
+    public interface OnHighlightChangeListener {
+        void onChanged(int position, int prev);
+    }
+
     public static class Entry extends LineEntry {
         public Entry(int index, float value) {
             super(index, value);
@@ -146,6 +150,7 @@ public class LineChartBase<X extends LineChartBase.XAxis, E extends LineChartBas
      * 高亮entry 位置
      */
     int highlightIndex = -1;
+    OnHighlightChangeListener onHighlightChangeListener;
     /**
      * 选中高亮颜色
      */
@@ -275,6 +280,18 @@ public class LineChartBase<X extends LineChartBase.XAxis, E extends LineChartBas
         setPadding(0, 0, 0, 0);
 
 //        setBackgroundColor(Color.parseColor("#33FFFF00"));
+    }
+
+    public void setOnHighlightChangeListener(OnHighlightChangeListener onHighlightChangeListener) {
+        this.onHighlightChangeListener = onHighlightChangeListener;
+    }
+
+    private void changeAndNotifyHighlightIndex(int position) {
+        int prev = highlightIndex;
+        highlightIndex = position;
+        if (onHighlightChangeListener != null && prev != position) {
+            onHighlightChangeListener.onChanged(position, prev);
+        }
     }
 
     public void setMarksRender(Render<LineChartBase<X, E>> marksRender) {
@@ -452,11 +469,11 @@ public class LineChartBase<X extends LineChartBase.XAxis, E extends LineChartBas
             }
             if (showHighlight) {
                 showHighlight = false;
-                animateX();
+//                animateX();
             } else {
                 showHighlight = true;
                 highlightPoint.set(event.getX(), event.getY());
-                highlightIndex = transXToIndex(event.getX());
+                changeAndNotifyHighlightIndex(transXToIndex(event.getX()));
             }
             invalidate();
             return true;
@@ -471,7 +488,7 @@ public class LineChartBase<X extends LineChartBase.XAxis, E extends LineChartBas
                 scrollViewParent.requestDisallowInterceptTouchEvent(true);
             }
             highlightPoint.set(event.getX(), event.getY());
-            highlightIndex = transXToIndex(event.getX());
+            changeAndNotifyHighlightIndex(transXToIndex(event.getX()));
             showHighlight = true;
             showHighlightByLongPress = true;
         }
@@ -481,7 +498,7 @@ public class LineChartBase<X extends LineChartBase.XAxis, E extends LineChartBas
     public void clearHighlight() {
         showHighlight = false;
         showHighlightByLongPress = false;
-        highlightIndex = -1;
+        changeAndNotifyHighlightIndex(-1);
         invalidate();
     }
 
@@ -495,7 +512,7 @@ public class LineChartBase<X extends LineChartBase.XAxis, E extends LineChartBas
                 }
                 if (showHighlightByLongPress) {
                     highlightPoint.set(event.getX(), event.getY());
-                    highlightIndex = transXToIndex(event.getX());
+                    changeAndNotifyHighlightIndex(transXToIndex(event.getX()));
                     invalidate();
                 } else if (showHighlight) {
                     clearHighlight();
@@ -633,7 +650,9 @@ public class LineChartBase<X extends LineChartBase.XAxis, E extends LineChartBas
                 X xVal = xValues.get(i);
                 CharSequence label = xVal.getLabel();
                 if (labelWidth == -1) {
-                    // FIXME 使用第一条数据作为x轴宽度标准, 每次都精准测量数据到10000级别会导致卡顿
+                    // FIXME
+                    //  不够精准
+                    //  使用第一条数据作为x轴宽度标准, 每次都精准测量数据到10000级别会导致卡顿
                     labelWidth = axisPaint.measureText(label, 0, label.length());
                 }
                 if (nextStartX > pervDrawEndX) {

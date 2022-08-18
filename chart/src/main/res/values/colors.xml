@@ -15,4 +15,5 @@
     <color name="chart_highlight_color">#49a5ff</color>
     <color name="chart_legend_text_color">#20282f</color>
     <color name="chart_sub_legend_text_color">#717273</color>
+    <color name="chart_event_color">#FF5353</color>
 </resources>
