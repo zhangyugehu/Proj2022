@@ -2,6 +2,7 @@ package com.thssh.glide;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -97,8 +98,9 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView imageView = findViewById(R.id.image_view);
 
-        Target<GlideDrawable> target = Glide.with(this)
+        Target<GlideDrawable> target = Glide.with(this).load(Uri.fromFile())
                 .load(URL)
                 .into(imageView);
+
     }
 }

@@ -13,6 +13,7 @@
       <module name="Proj2022.crypto.test" target="1.8" />
       <module name="Proj2022.customview" target="11" />
       <module name="Proj2022.glide" target="11" />
+      <module name="Proj2022.imagecompressor" target="11" />
       <module name="Proj2022.javacommon" target="11" />
       <module name="Proj2022.javacommon.main" target="11" />
       <module name="Proj2022.javacommon.test" target="11" />
