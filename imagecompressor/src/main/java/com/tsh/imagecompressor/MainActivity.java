@@ -24,13 +24,14 @@ import android.widget.Toast;
 
 import com.tsh.imagecompressor.lib.CompressException;
 import com.tsh.imagecompressor.lib.Config;
-import com.tsh.imagecompressor.lib.DimensionProcessor;
 import com.tsh.imagecompressor.lib.ImageCompressor;
-import com.tsh.imagecompressor.lib.QuickSizeProcessor;
-import com.tsh.imagecompressor.lib.Streamer;
+import com.tsh.imagecompressor.lib.processor.AbsProcessor;
+import com.tsh.imagecompressor.lib.processor.ConcatProcessor;
+import com.tsh.imagecompressor.lib.processor.DimensionProcessor;
+import com.tsh.imagecompressor.lib.processor.SizeProcessor;
+import com.tsh.imagecompressor.lib.StreamProvider;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 //        compress(() -> getResources().openRawResource(R.raw.p1));
     }
 
-    private void compress(Streamer streamer) {
+    private void compress(StreamProvider streamer) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("处理中...")
                 .setCustomTitle(new ProgressBar(this)).show();
@@ -116,10 +117,12 @@ public class MainActivity extends AppCompatActivity {
             long cost = Global.cost(() -> {
                 try {
                     display(srcBitmap = decodeDisplayBitmap(streamer));
-                    ImageCompressor.CompressResult compressResult = new ImageCompressor(
-                            new DimensionProcessor(this).toSmallDimension())
-//                            new QuickSizeProcessor(this).toMediumSize())
-                            .with(Config.newBuilder().setFormat(Bitmap.CompressFormat.JPEG).setStreamer(streamer).build())
+                    ImageCompressor.CompressResult compressResult = ImageCompressor
+                            .withConfig(Config.newBuilder().setFormat(Bitmap.CompressFormat.JPEG).setStreamProvider(streamer).build())
+                            .byProcessor(
+//                            new DimensionProcessor().toSmallDimension())
+//                            new SizeProcessor().toMediumSize())
+                            new ConcatProcessor(new DimensionProcessor().toSmallDimension(), new SizeProcessor().toMediumSize()))
                             .compress();
                     dstBitmap = compressResult.toBitmap();
                     File dstFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "compress.jpg");
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private Bitmap decodeDisplayBitmap(Streamer stream) throws IOException {
+    private Bitmap decodeDisplayBitmap(StreamProvider stream) throws IOException, CompressException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(stream.openStream(), null, options);

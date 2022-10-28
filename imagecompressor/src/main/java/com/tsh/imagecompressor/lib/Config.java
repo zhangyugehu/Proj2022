@@ -1,30 +1,21 @@
 package com.tsh.imagecompressor.lib;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
-
-import java.io.InputStream;
 
 /**
  * @author hutianhang
  */
-public class Config extends ConfigMember {
+public class Config extends ConfigConstant {
 
-    public static class Builder extends ConfigMember {
-
-        public Builder setUri(Uri uri) {
-            this.uri = uri;
-            return this;
-        }
-
+    public static class Builder extends ConfigConstant {
 
         public Builder setFormat(Bitmap.CompressFormat format) {
             this.format = format;
             return this;
         }
 
-        public Builder setStreamer(Streamer streamer) {
-            this.streamer = streamer;
+        public Builder setStreamProvider(StreamProvider streamProvider) {
+            this.streamProvider = streamProvider;
             return this;
         }
 
@@ -35,8 +26,7 @@ public class Config extends ConfigMember {
 
         public Config build() {
             Config config = new Config();
-            config.uri = uri;
-            config.streamer = streamer;
+            config.streamProvider = streamProvider;
             config.format = format;
             config.quality = quality;
             return config;
@@ -47,15 +37,22 @@ public class Config extends ConfigMember {
         return new Builder();
     }
 
-    public Config() {
+    public Builder upon() {
+        return Config.newBuilder()
+                .setFormat(format)
+                .setQuality(quality)
+                .setStreamProvider(streamProvider);
     }
 
-    public Uri getUri() {
-        return uri;
+    private Config() {
     }
 
-    public Streamer getStreamer() {
-        return streamer;
+    public void setStreamProvider(StreamProvider provider) {
+        this.streamProvider = provider;
+    }
+
+    public StreamProvider getStreamProvider() {
+        return streamProvider;
     }
 
     public Bitmap.CompressFormat getFormat() {

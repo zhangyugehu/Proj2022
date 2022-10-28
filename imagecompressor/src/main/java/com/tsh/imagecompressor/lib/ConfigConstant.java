@@ -1,16 +1,12 @@
 package com.tsh.imagecompressor.lib;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
-
-import java.io.InputStream;
 
 /**
  * @author hutianhang
  */
-public class ConfigMember {
-    protected Uri uri;
-    protected Streamer streamer;
+public class ConfigConstant {
+    protected StreamProvider streamProvider;
     protected Bitmap.CompressFormat format;
     protected int quality = 70;
 }

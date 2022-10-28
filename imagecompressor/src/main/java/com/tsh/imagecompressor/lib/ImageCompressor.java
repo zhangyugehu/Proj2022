@@ -1,6 +1,9 @@
 package com.tsh.imagecompressor.lib;
 
 import android.graphics.Bitmap;
+import android.os.Looper;
+
+import com.tsh.imagecompressor.lib.processor.AbsProcessor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,11 +11,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * 图片压缩操作类
+ *
  * @author hutianhang
  */
 public class ImageCompressor {
 
-    public class CompressResult {
+    public static class CompressResult {
 
         private final Bitmap bitmap;
         private final Config config;
@@ -36,23 +41,34 @@ public class ImageCompressor {
 
     }
 
-    private final AbsProcessor compressor;
-    private Config config;
-
-    public ImageCompressor(AbsProcessor compressor) {
-        this.compressor = compressor;
+    public static ImageCompressor withConfig(Config config) {
+        return new ImageCompressor(config);
     }
 
-    public ImageCompressor with(Config config) {
+    private AbsProcessor processor;
+    private Config config;
+
+    public ImageCompressor(AbsProcessor processor) {
+        this.processor = processor;
+    }
+
+    public ImageCompressor(Config config) {
         this.config = config;
+    }
+
+    public ImageCompressor byProcessor(AbsProcessor processor) {
+        this.processor = processor;
         return this;
     }
 
     public CompressResult compress() throws CompressException {
-        if (compressor == null) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            throw new CompressException("Do not execute this function on the main thread.");
+        }
+        if (processor == null) {
             throw new CompressException("compressor null");
         }
-        compressor.setConfig(config);
-        return new CompressResult(config, compressor.compress());
+        processor.setConfig(config);
+        return new CompressResult(config, processor.compress());
     }
 }

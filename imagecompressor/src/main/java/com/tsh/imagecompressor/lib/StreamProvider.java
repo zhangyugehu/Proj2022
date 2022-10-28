@@ -6,12 +6,12 @@ import java.io.InputStream;
 /**
  * @author hutianhang
  */
-public interface Streamer {
+public interface StreamProvider {
     /**
      * 打开流
      *
      * @return
      * @throws IOException
      */
-    InputStream openStream() throws IOException;
+    InputStream openStream() throws IOException, CompressException;
 }

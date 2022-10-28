@@ -1,20 +1,21 @@
-package com.tsh.imagecompressor.lib;
+package com.tsh.imagecompressor.lib.processor;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.format.Formatter;
 import android.util.Log;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import com.tsh.imagecompressor.Global;
+import com.tsh.imagecompressor.lib.CompressException;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
+ * 文件大小压缩处理器
+ *
  * @author hutianhang
  */
-public class QuickSizeProcessor extends AbsProcessor {
+public class SizeProcessor extends AbsProcessor {
 
     private static final long MB = 1024 * 1024;
     private static final long KB = 1024;
@@ -24,58 +25,56 @@ public class QuickSizeProcessor extends AbsProcessor {
     private static final long SIZE_SMALL = 512 * KB;
 
     private long dstSize = -1;
+    private byte[] bytesData;
 
-    public QuickSizeProcessor(Context context) {
-        super(context);
-    }
-
-    public QuickSizeProcessor toSize(long size) {
+    public SizeProcessor toSize(long size) {
         dstSize = size;
         return this;
     }
 
-    public QuickSizeProcessor toSmallSize() {
+    public SizeProcessor toSmallSize() {
         return toSize(SIZE_SMALL);
     }
 
-    public QuickSizeProcessor toMediumSize() {
+    public SizeProcessor toMediumSize() {
         return toSize(SIZE_MEDIUM);
     }
 
-    public QuickSizeProcessor toLargeSize() {
+    public SizeProcessor toLargeSize() {
         return toSize(SIZE_LARGE);
     }
 
-    public QuickSizeProcessor toExtraLargeSize() {
+    public SizeProcessor toExtraLargeSize() {
         return toSize(SIZE_EXTRA_LARGE);
     }
 
     @Override
-    Bitmap compress() throws CompressException {
+    public Bitmap compress() throws CompressException {
         if (dstSize <= 0) {
             throw new CompressException("targetSize must > 0");
         }
-        File tmpFile = new File(context.getCacheDir(), "compress.tmp");
-        boolean delete = tmpFile.delete();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
         Bitmap result = null;
-        Log.i("MainActivityTag", "except to: " + Formatter.formatFileSize(context, dstSize));
-        while (tmpFile.length() == 0 || tmpFile.length() > dstSize) {
+        Log.i("MainActivityTag", "except to: " + Global.readableSize(dstSize));
+        while (bytesData == null || bytesData.length > dstSize) {
             result = handleSourceStream(is -> BitmapFactory.decodeStream(is, null, options));
-            try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream((tmpFile)))) {
+            try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
                 result.compress(config.getFormat(), config.getQuality(), bos);
+                bytesData = bos.toByteArray();
                 if (options.inSampleSize == 1) {
-                    options.inSampleSize = (int) Math.sqrt(tmpFile.length() / (dstSize * 1.0f));
+                    // 第一次根据大小计算大概的采样率
+                    options.inSampleSize = (int) Math.sqrt(bytesData.length / (dstSize * 1.0f));
                 }
             } catch (IOException e) {
                 throw new CompressException("", e);
             }
             Log.i("MainActivityTag",
-                    "tmpFile.length: " + Formatter.formatFileSize(context, tmpFile.length()) +
+                    "bytesData.length: " + Global.readableSize(bytesData.length) +
                     ", inSampleSize: " + options.inSampleSize +
                     ", bitmap size: " + result.getWidth() + "x" + result.getHeight()
             );
+            // 不符合要求时进一步压缩采样率
             options.inSampleSize += 1;
         }
         return result;

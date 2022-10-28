@@ -1,10 +1,13 @@
-package com.tsh.imagecompressor.lib;
+package com.tsh.imagecompressor.lib.processor;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.tsh.imagecompressor.lib.CompressException;
+
 /**
+ * 尺寸压缩处理器
+ *
  * @author hutianhang
  */
 public class DimensionProcessor extends AbsProcessor {
@@ -32,12 +35,8 @@ public class DimensionProcessor extends AbsProcessor {
         return toDimension(DIMENSIONS_LAGER);
     }
 
-    public DimensionProcessor(Context context) {
-        super(context);
-    }
-
     @Override
-    Bitmap compress() throws CompressException {
+    public Bitmap compress() throws CompressException {
         if (dimension <= 0) {
             throw new CompressException("dimension must > 0");
         }
